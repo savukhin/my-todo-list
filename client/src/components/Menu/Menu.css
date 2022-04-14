@@ -1,0 +1,6 @@
+.menu {
+    background-color: var(--second-bg-color);
+    border: 1px solid var(--frame-color);
+    grid-row: 2;
+    grid-column: 1;
+}
