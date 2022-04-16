@@ -1,16 +1,17 @@
 import './App.css';
-import Menu from './components/Menu/Menu.jsx'
-import Navbar from './components/Navbar/Navbar.jsx'
-import Tasks from './components/Tasks/Tasks.jsx'
+import RegistrationPage from './pages/Registration';
+import TodoListPage from './pages/TodoList';
+import { Route, BrowserRouter, Routes } from 'react-router-dom';
 
 function App() {
   return (
     <div className="App">
-      <div className="wrapper">
-        <Navbar />
-        <Menu />
-        <Tasks />
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/reg" element={<RegistrationPage />}></Route>
+          <Route exact path="/app" element={<TodoListPage />}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
