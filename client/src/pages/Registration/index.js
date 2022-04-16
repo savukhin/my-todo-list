@@ -14,7 +14,6 @@ class RegistrationPage extends Component {
             password,
             password2
         }
-        console.log(req);
 
         fetch('/api/auth/reg', {
             method: 'POST',
@@ -41,13 +40,13 @@ class RegistrationPage extends Component {
                 <h1>Registration</h1>
                 <form id="reg-form">
                     <label htmlFor="username">Login </label>
-                    <input id="username"></input>
+                    <input autoComplete='off' id="username"></input>
                     <br />
                     <label htmlFor="password">Password </label>
-                    <input id="password"></input>
+                    <input autoComplete='off' type="password" id="password"></input>
                     <br />
                     <label htmlFor="password2">Password again </label>
-                    <input id="password2"></input>
+                    <input autoComplete='off' type="password" id="password2"></input>
                     <br />
                     <input type="submit" value="Отправить" />
                 </form>
