@@ -59,10 +59,10 @@ class Menu extends Component {
             <div className="menu">
                 <h2>Menu</h2>
                 <div className="projects-panel">
-                    <div className="project-tab"> <span> Incoming </span> </div>
-                    <div className="project-tab"> <span> Today </span> </div>
-                    <div className="project-tab"> <span> Upcoming </span> </div>
-                    <div className="project-tab"> <span> Filters </span> </div>
+                    <div className="project-tab"> <div className='project-name'> <span> Incoming </span> </div> </div>
+                    <div className="project-tab"> <div className='project-name'> <span> Today </span> </div> </div>
+                    <div className="project-tab"> <div className='project-name'> <span> Upcoming </span> </div> </div>
+                    <div className="project-tab"> <div className='project-name'> <span> Filters </span> </div> </div> 
                 </div>
 
                 <div className="expansion-panel" onClick={() => this.hideExpansion("favorite_projects")}>
