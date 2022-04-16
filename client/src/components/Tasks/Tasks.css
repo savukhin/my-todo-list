@@ -1,0 +1,58 @@
+.tasks {
+    background-color: var(--main-bg-color);
+    border: 1px solid var(--frame-color);
+    grid-row: 2;
+    grid-column: 2;
+}
+
+.tasks ul {
+    list-style: none;
+    margin: auto;
+    width: 30%;
+    padding: 0px;
+}
+
+.tasks li {
+    line-height: 2rem;
+    border-bottom: 1px solid var(--additional-color);
+}
+
+.tasks li span {
+    margin: 10px;
+}
+
+.tasks button {
+    animation-name: buttonOut;
+    animation-duration: 0.2s;
+    border: 1px solid var(--additional-color);
+    width:20px;
+    height:20px;
+    border-radius: 100%;
+    background-color: unset;
+    cursor: pointer;
+}
+
+.tasks button:hover {
+    /* background-color: var(--additional-color); */
+    /* background-color: rgba(255, 255, 255, 0.5); */
+    /* border-color: var(--text-color); */
+    animation-name: buttonIn;
+    animation-duration: 0.2s;
+    animation-fill-mode: forwards;
+}
+
+/* @media (prefers-reduced-motion: no-preference) {
+    .tasks button:hover {
+      animation: buttonIn 0.4s forwards;
+    }
+  } */
+
+@keyframes buttonIn {
+from { background-color: unset; }
+to { background-color: var(--additional-color); }
+}
+
+@keyframes buttonOut {
+    from { background-color: var(--additional-color); }
+    to { background-color: unset; }
+}

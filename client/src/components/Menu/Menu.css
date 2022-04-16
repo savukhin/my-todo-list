@@ -1,0 +1,50 @@
+.menu {
+    background-color: var(--second-bg-color);
+    border: 1px solid var(--frame-color);
+    grid-row: 2;
+    grid-column: 1;
+    user-select: none;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0px;
+}
+
+.menu .expansion-panel {
+    display: block;
+    padding-top: 40px;
+    cursor: pointer;
+}
+
+.menu .projects-panel {
+    position: relative;
+    align-items: center;
+    padding-left: 50px;
+    padding-right: 5px;
+    font-size: large;
+}
+
+.menu .project-tab {
+    /* display: block; */
+    display: flex;
+    border-radius: 5px;
+    padding: 5px 3px;
+    align-items: left;
+}
+
+.menu .project-tab:hover {
+    background-color: var(--additional-color);
+}
+
+.menu .project-tab span {
+    display: flex;
+    text-align: left;
+    overflow: hidden;
+}
+
+.menu .project-tab .project-name {
+    display: flex;
+    flex: 1;
+    cursor: pointer;
+}
