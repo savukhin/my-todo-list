@@ -6,7 +6,24 @@ class RegistrationPage extends Component {
         event.preventDefault();
         var x = document.getElementById('reg-form');
         console.log(x);
-        // fetch('/api/register')
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const password2 = document.getElementById("password2").value;
+        const req = {
+            username,
+            password,
+            password2
+        }
+        console.log(req);
+
+        fetch('/api/auth/reg', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(req)
+        }).then (res => res.json())
+            .then(res => console.log(res));
     }
 
     componentDidMount() {

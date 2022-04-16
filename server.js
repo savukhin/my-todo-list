@@ -1,6 +1,10 @@
 const express = require("express")
 const app = express();
+const router = require('./server/Routes/index')
 
+app.use(express.json());
+app.use(express.json());
+app.use('/api', router);
 app.get(`/api`, (req, res) => {
     res.json({"message": "Server works"});
 });
