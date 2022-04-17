@@ -1,4 +1,7 @@
 const { User } = require('../Models/models')
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
 
 class UserController {
     async register(req, res) {
@@ -23,7 +26,59 @@ class UserController {
     }
 
     async login(req, res) {
-        res.json('LOGIN POST');
+        console.log(req.body)
+
+        const { username, password } = req.body;
+        const user = await User.findOne({
+            where: {
+                email: username,
+                password: password
+            },
+            raw: true
+        });
+
+        if (!user)
+            return res.json({ status: 'error', error: 'User not found' });
+
+        const token = jwt.sign(
+            {
+                id: user.id,
+                username: user.email
+            },
+            JWT_SECRET
+        );
+
+        res.json({ status: 'ok', data: token });
+    }
+
+    async changePassword(req, res) {
+        const { token } = req.body;
+        
+        const existing = await User.findOne(
+            { where: { id: 1 } }
+        );
+
+        console.log(" try to update to newpassword ", req.body.newPassword, " from ", existing.password);
+        
+        try {
+            const user = jwt.verify(token, JWT_SECRET);
+            await User.update(
+                { password: req.body.newPassword },
+                { where: { id: user.id } }
+            )
+            .then(result =>
+                console.log('success', result)
+            )
+            .catch(err =>
+                console.log(err)
+            )
+            console.log("JWT decoded", user);
+        } catch {
+            return res.json({ status: 'error', error: 'unvalid token' });
+        }
+
+
+        return res.json({ status: "ok" })
     }
 }
 
