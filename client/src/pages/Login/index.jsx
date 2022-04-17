@@ -21,7 +21,7 @@ class LoginPage extends Component {
         }).then (res => res.json())
             .then(res => {
                 console.log(res);
-                if (res.status == 'ok') {
+                if (res.status === 'ok') {
                     console.log(`Got the token: `, res.data);
                     localStorage.setItem('token', res.data)
                 } else {

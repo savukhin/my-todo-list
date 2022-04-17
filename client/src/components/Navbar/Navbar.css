@@ -24,13 +24,13 @@
     padding: 3px 10px;
 }
 
-.navbar .search-bar {
+.input-bar {
     height: calc(100% - 20px);
     padding: 10px;
     width: 100%;
 }
 
-.navbar .search-bar input {
+input {
     border: 1px solid var(--additional-color);
     background-color: var(--main-bg-color);
     width: calc(100% - 30px);

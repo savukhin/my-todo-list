@@ -3,25 +3,37 @@
     border: 1px solid var(--frame-color);
     grid-row: 2;
     grid-column: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.tasks .content {
+    width: 500px;
+    left: 50%;
 }
 
 .tasks ul {
     list-style: none;
     margin: auto;
-    width: 30%;
     padding: 0px;
 }
 
 .tasks li {
-    line-height: 2rem;
+    position: relative;
+    padding-left: 50px;
+    padding-right: 5px;
+    display: flex;
+    align-items: center;
     border-bottom: 1px solid var(--additional-color);
 }
 
-.tasks li span {
+.tasks span {
     margin: 10px;
+    text-align: left;
+    /* flex: 1; */
 }
 
-.tasks button {
+.tasks ul button {
     animation-name: buttonOut;
     animation-duration: 0.2s;
     border: 1px solid var(--additional-color);
@@ -30,9 +42,10 @@
     border-radius: 100%;
     background-color: unset;
     cursor: pointer;
+    color: var(--text-color);
 }
 
-.tasks button:hover {
+.tasks ul button:hover {
     /* background-color: var(--additional-color); */
     /* background-color: rgba(255, 255, 255, 0.5); */
     /* border-color: var(--text-color); */
@@ -55,4 +68,38 @@ to { background-color: var(--additional-color); }
 @keyframes buttonOut {
     from { background-color: var(--additional-color); }
     to { background-color: unset; }
+}
+
+.tasks #add-task-suggestion {
+    position: relative;
+    padding-left: 50px;
+    padding-right: 5px;
+    display: flex;
+    align-items: center;
+    line-height: 2em;
+    cursor: pointer;
+}
+
+.tasks #add-task-suggestion:hover {
+    color: var(--additional-color);
+}
+
+/* .tasks #add-task-suggestion span {
+    text-align: left;
+} */
+
+.tasks #add-task {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tasks #add-task button {
+    margin: 2px 5px;
+    border-radius: 10px;
+    border: 1px solid var(--frame-color);
+    color: var(--text-color);
+    padding: 8px 10px;
+    background-color: var(--additional-color);
+    font-size: 15px;
+    cursor: pointer;
 }
