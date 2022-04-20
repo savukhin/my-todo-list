@@ -3,6 +3,10 @@ import './Navbar.css'
 import {Helmet} from "react-helmet";
 
 class Navbar extends Component {
+    logout() {
+        
+    }
+
     render() {
         return (
             <div className="navbar">
@@ -23,6 +27,7 @@ class Navbar extends Component {
                     <div className='profilePhoto'>
                         <img src={require("./../../img/blank-profile-picture-973460_1280.webp")} alt=""></img>
                     </div>
+                    <button onClick={this.logout}>Log out</button>
                 </div>
             </div>
         )

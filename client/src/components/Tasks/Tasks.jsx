@@ -61,7 +61,7 @@ class Tasks extends Component {
 
         const req = {
             token: localStorage.getItem('token'),
-            title: "title",
+            title: title,
             description: "",
         }
 

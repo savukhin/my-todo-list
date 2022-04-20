@@ -6,7 +6,7 @@ const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
 class TasksController {
     async getTasks(req, res) {
         var { token } = req.body;
-        // console.log(`get tasks request with body`, req.body, `token ${token}`);
+        console.log(`get tasks request with body`, req.body, `token ${token}`);
 
         var user;
         try {
