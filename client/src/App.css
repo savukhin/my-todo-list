@@ -21,3 +21,22 @@ input, .button {
 .button {
   cursor: pointer;
 }
+
+.button:hover {
+  background-color: var(--second-bg-color);
+}
+
+.button:active {
+  /* background-color: var(--second-bg-color); */
+  transform: translateY(5%);
+}
+
+.accept {
+  border: 1px solid var(--additional-color);
+  background-color: var(--additional-color);
+}
+
+.warning {
+  border: 1px solid var(--warning-color);
+  background-color: var(--frame-color);
+}

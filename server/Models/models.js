@@ -11,6 +11,7 @@ const User = sequelize.define('user', {
 const Project = sequelize.define('project', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     title: {type: DataTypes.STRING, allowNull: false},
+    color: {type: DataTypes.STRING, allowNull: false},
     isFavorite: {type: DataTypes.BOOLEAN, defaultValue: false}
 })
 

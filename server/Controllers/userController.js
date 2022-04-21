@@ -54,13 +54,24 @@ async function login(req, res) {
 }
 
 async function checkToken(req, res) {
-    var { token } = req.body;
+    let { token } = req.body;
 
-    var user;
+    let verification;
     try {
-        user = jwt.verify(token, JWT_SECRET);
+        verification = jwt.verify(token, JWT_SECRET);
     } catch {
         return res.status(400).json({ error: 'unvalid token' });
+    }
+    
+    let user;
+    try {
+        user = await User.findOne({
+            where: {
+                id: verification.id
+            }
+        });
+    } catch (error) {
+        return res.status(400).json({ error: 'User not found' });
     }
 
     if (!user)

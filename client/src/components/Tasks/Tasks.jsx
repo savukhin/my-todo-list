@@ -55,7 +55,7 @@ class Tasks extends Component {
 
     componentDidMount() {
         $('#add-task').css("display", "none");
-        this.getTasks(0)
+        this.getTasks();
     }
 
     addTask = (title) => {
@@ -89,7 +89,6 @@ class Tasks extends Component {
 
     addTaskClick() {
         var title = $(`#task-title`).val();
-        // console.log(`title is '${title}''`);
         this.addTask(title);
     }
 
@@ -98,7 +97,6 @@ class Tasks extends Component {
             token: localStorage.getItem('token'),
             taskId
         }
-        console.log(req);
 
         fetch('/api/tasks/complete', {
             method: 'POST',
@@ -136,8 +134,6 @@ class Tasks extends Component {
                             <li key={task.id}>
                                 <button onClick={() => this.completeTask(task.id)}></button>
                                 <span>{task.title}</span>
-                                <span>{ task.completed.toString() }</span>
-                                <span>{ task.id }</span>
                             </li>
                         )}
                     </ul>

@@ -3,6 +3,7 @@ import Menu from '../../components/Menu/Menu.jsx'
 import Navbar from '../../components/Navbar/Navbar.jsx'
 import Tasks from '../../components/Tasks/Tasks';
 import { useNavigate } from 'react-router-dom'
+import ProjectPanel from '../../components/ProjectPanel/ProjectPanel.jsx';
 
 class TodoListPage extends Component {
   constructor(props) {
@@ -13,12 +14,14 @@ class TodoListPage extends Component {
   }
 
   render() {
-      return (
+    return (
+      <div>
         <div className="wrapper">
-            <Navbar />
-            <Menu />
-            <Tasks />
+          <Navbar />
+          <Menu />
+          <Tasks />
         </div>
+      </div>
     );
   }
 }

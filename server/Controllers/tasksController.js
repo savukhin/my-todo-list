@@ -43,7 +43,7 @@ async function addTask(req, res) {
     })
 
     console.log(tasks);
-    return res.status(200);
+    return res.status(200).json({ data: "ok" });
 }
 
 async function completeTask(req, res) {

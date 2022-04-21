@@ -15,10 +15,18 @@ const confirmPassword = () =>
 
 const checkToken = () => body("token", "Must have token").matches(/^.+\..+\..+$/, "invalid token type");
 
+const isColor = (param, msg) => body(param, msg).matches(/^#[0-9a-f]{3,6}$/);
+
 const isAuthenticated = () => {
     return (req, res, next) => {
         
     }
 }
 
-module.exports = { checkPassword, confirmPassword, checkUsername, checkToken};
+module.exports = {
+    checkPassword, 
+    confirmPassword, 
+    checkUsername, 
+    checkToken,
+    isColor,
+};

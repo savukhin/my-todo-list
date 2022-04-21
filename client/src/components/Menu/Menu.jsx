@@ -1,18 +1,50 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import './Menu.css'
 import $ from 'jquery';
+import ProjectPanel from '../ProjectPanel/ProjectPanel';
 
-class Menu extends Component {
-    constructor() {
-        super();
-        this.state = {
-            projects: [{ id: 1, title: "Health", isFavorite: true, color: "#ff0000" },
-            { id: 2, title: "to-do-list", isFavorite: true, color: "#00ff00" },
-            { id: 3, title: "Study", isFavorite: false, color: "#ff00ff" }]
+function Menu() {
+        // super();
+    // this.state = {
+        // projects: [{ id: 1, title: "Health", isFavorite: true, color: "#ff0000" },
+        // { id: 2, title: "to-do-list", isFavorite: true, color: "#00ff00" },
+        // { id: 3, title: "Study", isFavorite: false, color: "#ff00ff" }]
+    // }
+    // $('#add-task').css("display", "none");
+    const [projects, setProjects] = useState(
+        [{ id: 1, title: "Health", isFavorite: true, color: "#ff0000" },
+        { id: 2, title: "to-do-list", isFavorite: true, color: "#00ff00" },
+        { id: 3, title: "Study", isFavorite: false, color: "#ff00ff" }]
+    );
+
+    function getProjects() {
+        const req = {
+            token: localStorage.getItem('token')
         }
+
+        fetch('/api/projects/get', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(req)
+        })
+        .then((res) => {
+            if (res.status >= 200 && res.status < 300) {
+                return res;
+            } else {
+                let error = new Error(res.statusText);
+                error.response = res;
+                throw error;
+            }
+        })
+        .then (res => res.json())
+        .then(res => {
+            setProjects(res.data);
+        });
     }
 
-    printProjects(projects) {
+    function printProjects(projects) {
         return (
             <div className="projects-panel">
                 {projects.map(project =>
@@ -35,7 +67,7 @@ class Menu extends Component {
         )
     }
 
-    drawDownArrow() {
+    function drawDownArrow() {
         return (
             <svg width="16px" height="16px" viewBox="0 0 16 16">
                 <g transform="translate(-266, -17)" fill="#777777">
@@ -46,7 +78,7 @@ class Menu extends Component {
         )
     }
 
-    hideExpansion(id) {
+    function hideExpansion(id) {
         var displaying = $(`#${id}`).css("display");
         if (displaying === "none")
             $(`#${id}`).css("display", "block");
@@ -54,40 +86,52 @@ class Menu extends Component {
             $(`#${id}`).css("display", "none");
     }
 
-    render() {
-        return (
-            <div className="menu">
-                <h2>Menu</h2>
-                <div className="projects-panel">
-                    <div className="project-tab"> <div className='project-name'> <span> Incoming </span> </div> </div>
-                    <div className="project-tab"> <div className='project-name'> <span> Today </span> </div> </div>
-                    <div className="project-tab"> <div className='project-name'> <span> Upcoming </span> </div> </div>
-                    <div className="project-tab"> <div className='project-name'> <span> Filters </span> </div> </div> 
-                </div>
+    function showAddProject() {
+        $('#edit-project-container')
+            .css("display", "");
+    }
 
-                <div className="expansion-panel" onClick={() => this.hideExpansion("favorite_projects")}>
-                    {this.drawDownArrow()}
-                    <span> Favorites </span>
-                </div>
+    useEffect(() => {
+    
+    })
 
-                <div id="favorite_projects">
-                    <div className="favorites">
-                        {this.printProjects(
-                            this.state.projects.filter(project => project.isFavorite)
-                        )}
-                    </div>
-                </div>
+    getProjects();
 
-                <div className="expansion-panel"  onClick={() => this.hideExpansion("all_projects")}>
-                    {this.drawDownArrow()}
-                    <span> All projects </span>
-                </div>
-                <div id="all_projects">
-                    {this.printProjects(this.state.projects)}
+    return (
+        <div className="menu">
+            <h2>Menu</h2>
+            <div className="projects-panel">
+                <div className="project-tab"> <div className='project-name'> <span> Incoming </span> </div> </div>
+                <div className="project-tab"> <div className='project-name'> <span> Today </span> </div> </div>
+                <div className="project-tab"> <div className='project-name'> <span> Upcoming </span> </div> </div>
+                <div className="project-tab"> <div className='project-name'> <span> Filters </span> </div> </div> 
+            </div>
+
+            <div className="expansion-panel" onClick={() => hideExpansion("favorite_projects")}>
+                {drawDownArrow()}
+                <span> Favorites </span>
+            </div>
+
+            <div id="favorite_projects">
+                <div className="favorites">
+                    {printProjects(
+                        projects.filter(project => project.isFavorite)
+                    )}
                 </div>
             </div>
-        )
-    }
+
+            <div className="expansion-panel"  onClick={() => hideExpansion("all_projects")}>
+                {drawDownArrow()}
+                <span> All projects </span>
+            </div>
+            <div id="all_projects">
+                {printProjects(projects)}
+            </div>
+            <div style={{marginLeft: "15%", width: "70%"}} className="button" onClick={showAddProject}>+</div>
+
+            <ProjectPanel updateProject={getProjects}/>
+        </div>
+    )
 }
 
 export default Menu;
