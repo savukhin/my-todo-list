@@ -1,4 +1,4 @@
-#project-panel {
+#task-panel {
     display: flex;
     width: 400px;
     /* background-color: var(--frame-color); */
@@ -7,22 +7,7 @@
     flex-direction: column;
 }
 
-.central-panel-container {
-    z-index: 10;
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-    padding: 15px;
-    overflow: auto;
-    background-color: rgba(35, 39, 42, 0.8);
-}
-
-#project-panel .header {
+#task-panel .header {
     display: flex;
     position: relative;
     background-color: var(--frame-color);
@@ -32,7 +17,7 @@
     border-radius: 10px 10px 0 0;
 }
 
-#project-panel .content {
+#task-panel .content {
     display: flex;
     position: relative;
     flex-direction: column;
@@ -41,6 +26,6 @@
     border-radius: 0 0 10px 10px;
 }
 
-#project-panel .content > * {
+#task-panel .content > * {
     margin-top: 10px;
 }

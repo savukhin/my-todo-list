@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Tasks.css'
 import $ from 'jquery'
+import TaskPanel from '../TaskPanel/TaskPanel';
 
 class Tasks extends Component {
     constructor() {
@@ -12,7 +13,8 @@ class Tasks extends Component {
             // { id: 4, content: "Take a Lunch" }]
 
             tasks: [],
-            user: { username: "Sava" }
+            user: { username: "Sava" },
+            choosenTask: false,
         }
     }
 
@@ -124,6 +126,17 @@ class Tasks extends Component {
         });
     }
 
+    choseTask(taskId) {
+        let task = this.state.tasks.filter(elem => elem.id === taskId)[0];
+        console.log("chose Task", task);
+        this.setState({ chosenTask: task })
+
+        // return (
+        //     <TaskPanel task={ task } />
+        // )
+        // $(".tasks").append(`<TaskPanel task={ ${task} } />`)
+    }
+
     render() {
         return (
             <div className="tasks">
@@ -131,7 +144,7 @@ class Tasks extends Component {
                     <h2>Tasks</h2>
                     <ul>
                         {this.state.tasks.filter(task => !task.completed).map(task =>
-                            <li key={task.id}>
+                            <li key={task.id} onClick={() => this.choseTask(task.id)}>
                                 <button onClick={() => this.completeTask(task.id)}></button>
                                 <span>{task.title}</span>
                             </li>
@@ -150,6 +163,10 @@ class Tasks extends Component {
                         <button style={{backgroundColor: 'var(--warning-color)'}} onClick={this.hideAddTaskBar}> Cancel </button>
                     </div>
                 </div>
+
+                {/* { this.state.showTaskPanel ? <TaskPanel showState={ this.state.showTaskPanel } task={ this.state.chosenTask }/> : null} */}
+                {/* { this.state.showTaskPanel ? <TaskPanel /> : null} */}
+                <TaskPanel task={ this.state.chosenTask }/>
             </div>
         )
     }

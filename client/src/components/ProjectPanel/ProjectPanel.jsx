@@ -46,8 +46,14 @@ function ProjectPanel(props) {
         createProject(title, color);
     }
 
+    function outerClick(event) {
+        console.log(event);
+        if (event.target === event.currentTarget)
+            hidePanel();
+    }
+
     return (
-        <div id="edit-project-container" className="central-panel-container" style={{"display" : "none"}}>
+        <div id="edit-project-container" className="central-panel-container" onClick={ outerClick } style={{"display" : "none"}}>
             <div id="project-panel">
                 <div className='header'>
                     Add project
