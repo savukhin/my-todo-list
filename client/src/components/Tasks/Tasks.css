@@ -12,6 +12,11 @@
     left: 50%;
 }
 
+.tasks input {
+    width: calc(100% - 30px);
+    height: calc(100% - 10px);
+}
+
 .tasks ul {
     list-style: none;
     margin: auto;

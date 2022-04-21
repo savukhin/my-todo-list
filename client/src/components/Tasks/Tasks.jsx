@@ -31,24 +31,26 @@ class Tasks extends Component {
             token: localStorage.getItem('token')
         }
 
-        console.log(req);
-
         fetch('/api/tasks/get', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(req)
-        }).then (res => res.json())
-            .then(res => {
-                console.log(res);
-                if (res.status === 'ok') {
-                    console.log(`Got data: `, res.data);
-                    // res.data.forEach()
-                    this.setState({ tasks: res.data });
-                } else {
-                }
-            });
+        })
+        .then((res) => {
+            if (res.status >= 200 && res.status < 300) {
+                return res;
+            } else {
+                let error = new Error(res.statusText);
+                error.response = res;
+                throw error;
+            }
+        })
+        .then (res => res.json())
+        .then(res => {
+            this.setState({ tasks: res.data });
+        });
     }
 
     componentDidMount() {
@@ -57,15 +59,11 @@ class Tasks extends Component {
     }
 
     addTask = (title) => {
-        console.log(`started add task with ${title}`);
-
         const req = {
             token: localStorage.getItem('token'),
             title: title,
             description: "",
         }
-
-        console.log(req);
 
         fetch('/api/tasks/add', {
             method: 'POST',
@@ -73,15 +71,21 @@ class Tasks extends Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(req)
-        }).then (res => res.json())
-            .then(res => {
-                console.log(res);
-                if (res.status === 'ok') {
-                    console.log(`Got data of add task: `, res.data);
-                    // localStorage.setItem('token', res.data)
-                } else {
-                }
-            });
+        })
+        .then((res) => {
+            if (res.status >= 200 && res.status < 300) {
+                return res;
+            } else {
+                let error = new Error(res.statusText);
+                error.response = res;
+                throw error;
+            }
+        })
+        .then (res => res.json())
+        .then(res => {
+            this.getTasks();
+            this.hideAddTaskBar();
+        });
     }
 
     addTaskClick() {

@@ -5,7 +5,7 @@ const checkUsername = () => body("username", "username must be longer than 5").i
 const checkPassword = () => body("password", "password must be longer than 5").isLength({ min: 5 })
 
 const confirmPassword = () => 
-    body('passwordConfirmation').custom((value, { req }) => {
+    body('password2').custom((value, { req }) => {
         if (value !== req.body.password) {
             throw new Error('Password confirmation does not match password');
         }
@@ -14,5 +14,11 @@ const confirmPassword = () =>
     })
 
 const checkToken = () => body("token", "Must have token").matches(/^.+\..+\..+$/, "invalid token type");
+
+const isAuthenticated = () => {
+    return (req, res, next) => {
+        
+    }
+}
 
 module.exports = { checkPassword, confirmPassword, checkUsername, checkToken};
