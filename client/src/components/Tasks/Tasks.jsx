@@ -84,7 +84,6 @@ class Tasks extends Component {
         .then (res => res.json())
         .then(res => {
             this.getTasks();
-            this.hideAddTaskBar();
         });
     }
 
@@ -94,16 +93,51 @@ class Tasks extends Component {
         this.addTask(title);
     }
 
+    completeTask(taskId) {
+        const req = {
+            token: localStorage.getItem('token'),
+            taskId
+        }
+        console.log(req);
+
+        fetch('/api/tasks/complete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(req)
+        })
+        .then((res) => {
+            if (res.status >= 200 && res.status < 300) {
+                return res;
+            } else {
+                let error = new Error(res.statusText);
+                error.response = res;
+                throw error;
+            }
+        })
+        .then (res => res.json())
+        .then(res => {
+            this.getTasks();
+            console.log("getTasks called");
+        })
+        .catch(error => {
+            console.log("Catched error ", error);
+        });
+    }
+
     render() {
         return (
             <div className="tasks">
                 <div className='content'>
                     <h2>Tasks</h2>
                     <ul>
-                        {this.state.tasks.map(task =>
+                        {this.state.tasks.filter(task => !task.completed).map(task =>
                             <li key={task.id}>
-                                <button></button>
+                                <button onClick={() => this.completeTask(task.id)}></button>
                                 <span>{task.title}</span>
+                                <span>{ task.completed.toString() }</span>
+                                <span>{ task.id }</span>
                             </li>
                         )}
                     </ul>

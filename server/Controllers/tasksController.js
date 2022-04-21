@@ -5,17 +5,15 @@ const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
 
 async function getTasks(req, res) {
     var { token } = req.body;
-    console.log(`get tasks request with body`, req.body, `token ${token}`);
 
     var user;
     try {
         user = jwt.verify(token, JWT_SECRET);
     } catch {
-        return res.json({ status: 'error', error: 'unvalid token' });
+        return res.status(400).json({ error: 'unvalid token' });
     }
 
     var tasks = await Task.findAll({
-        // { where: { id: user.id } }
         include: {
             model: User,
             where: {
@@ -24,20 +22,18 @@ async function getTasks(req, res) {
         },
         raw: true
     })
-    // console.log("JWT decoded", user);
-    console.log(tasks);
-    return res.json({ status: "ok", data: tasks });
+
+    return res.status(200).json({ data: tasks });
 }
 
 async function addTask(req, res) {
     var { token, title, description } = req.body;
-    console.log(`add task request with body`, req.body, `token ${token}`);
 
     var user;
     try {
         user = jwt.verify(token, JWT_SECRET);
     } catch {
-        return res.json({ status: 'error', error: 'unvalid token' });
+        return res.status(400).json({ error: 'unvalid token' });
     }
 
     var tasks = await Task.create({
@@ -47,11 +43,31 @@ async function addTask(req, res) {
     })
 
     console.log(tasks);
-    return res.json({ status: "ok" });
+    return res.status(200);
 }
 
 async function completeTask(req, res) {
+    var { token, taskId } = req.body;
 
+    var user;
+    try {
+        user = jwt.verify(token, JWT_SECRET);
+    } catch {
+        return res.status(400).json({ error: 'unvalid token' });
+    }
+
+    var task = await Task.findOne({
+        id: taskId
+    })
+    console.log(task);
+
+    if (user.id != task.userId)
+        return res.status(403);
+
+    task.completed = true;
+    task.save();
+
+    return res.status(200).json({ data: "ok" });
 }
 
 module.exports = {
