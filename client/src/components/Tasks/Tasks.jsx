@@ -1,34 +1,24 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Tasks.css'
 import $ from 'jquery'
 import TaskPanel from '../TaskPanel/TaskPanel';
 
-class Tasks extends Component {
-    constructor() {
-        super();
-        this.state = {
-            // tasks: [{ id: 1, content: "Make a Front end" },
-            // { id: 2, content: "Make a Back end" },
-            // { id: 3, content: "Make a Lunch" },
-            // { id: 4, content: "Take a Lunch" }]
+function Tasks(props) {
+    const [tasks, setTasks] = useState([]);
+    const [user, setUser] = useState({ username: "Sava" });
+    let [chosenTask, setChosenTask] = useState(false);
 
-            tasks: [],
-            user: { username: "Sava" },
-            choosenTask: false,
-        }
-    }
-
-    showAddTaskBar() {
+    function showAddTaskBar() {
         $(`#add-task-suggestion`).css("display", "none");
         $(`#add-task`).css("display", "");
     }
 
-    hideAddTaskBar() {
+    function hideAddTaskBar() {
         $(`#add-task-suggestion`).css("display", "");
         $(`#add-task`).css("display", "none");
     }
 
-    getTasks() {
+    function getTasks() {
         const req = {
             token: localStorage.getItem('token')
         }
@@ -40,27 +30,25 @@ class Tasks extends Component {
             },
             body: JSON.stringify(req)
         })
-        .then((res) => {
-            if (res.status >= 200 && res.status < 300) {
-                return res;
-            } else {
-                let error = new Error(res.statusText);
-                error.response = res;
-                throw error;
-            }
-        })
-        .then (res => res.json())
-        .then(res => {
-            this.setState({ tasks: res.data });
-        });
+            .then((res) => {
+                if (res.status >= 200 && res.status < 300) {
+                    return res;
+                } else {
+                    let error = new Error(res.statusText);
+                    error.response = res;
+                    throw error;
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res.data);
+                // this.setState({ tasks: res.data });
+                setTasks(res.data);
+            });
     }
 
-    componentDidMount() {
-        $('#add-task').css("display", "none");
-        this.getTasks();
-    }
 
-    addTask = (title) => {
+    function addTask(title) {
         const req = {
             token: localStorage.getItem('token'),
             title: title,
@@ -74,27 +62,27 @@ class Tasks extends Component {
             },
             body: JSON.stringify(req)
         })
-        .then((res) => {
-            if (res.status >= 200 && res.status < 300) {
-                return res;
-            } else {
-                let error = new Error(res.statusText);
-                error.response = res;
-                throw error;
-            }
-        })
-        .then (res => res.json())
-        .then(res => {
-            this.getTasks();
-        });
+            .then((res) => {
+                if (res.status >= 200 && res.status < 300) {
+                    return res;
+                } else {
+                    let error = new Error(res.statusText);
+                    error.response = res;
+                    throw error;
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                getTasks();
+            });
     }
 
-    addTaskClick() {
+    function addTaskClick() {
         var title = $(`#task-title`).val();
-        this.addTask(title);
+        addTask(title);
     }
 
-    completeTask(taskId) {
+    function completeTask(taskId) {
         const req = {
             token: localStorage.getItem('token'),
             taskId
@@ -107,68 +95,69 @@ class Tasks extends Component {
             },
             body: JSON.stringify(req)
         })
-        .then((res) => {
-            if (res.status >= 200 && res.status < 300) {
-                return res;
-            } else {
-                let error = new Error(res.statusText);
-                error.response = res;
-                throw error;
-            }
-        })
-        .then (res => res.json())
-        .then(res => {
-            this.getTasks();
-            console.log("getTasks called");
-        })
-        .catch(error => {
-            console.log("Catched error ", error);
-        });
+            .then((res) => {
+                if (res.status >= 200 && res.status < 300) {
+                    return res;
+                } else {
+                    let error = new Error(res.statusText);
+                    error.response = res;
+                    throw error;
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                getTasks();
+                console.log("getTasks called");
+            })
+            .catch(error => {
+                console.log("Catched error ", error);
+            });
     }
 
-    choseTask(taskId) {
-        let task = this.state.tasks.filter(elem => elem.id === taskId)[0];
-        this.setState({ chosenTask: task })
-
-        // return (
-        //     <TaskPanel task={ task } />
-        // )
-        // $(".tasks").append(`<TaskPanel task={ ${task} } />`)
+    function choseTask(taskId) {
+        let task = tasks.filter(elem => elem.id === taskId)[0];
+        setChosenTask(task);
     }
 
-    render() {
-        return (
-            <div className="tasks">
-                <div className='content'>
-                    <h2>Tasks</h2>
-                    <ul>
-                        {this.state.tasks.filter(task => !task.completed).map(task =>
-                            <li key={task.id} onClick={() => this.choseTask(task.id)}>
-                                <button onClick={() => this.completeTask(task.id)}></button>
-                                <span>{task.title}</span>
-                            </li>
-                        )}
-                    </ul>
-                    <div id="add-task-suggestion" onClick={this.showAddTaskBar}>
-                        <span>+</span>
-                        <span>Add Task...</span>
-                    </div>
-                    <div id="add-task">
-                        <div className='input-bar'>
-                            <input id="task-title" />
-                        </div>
-                        <br/>
-                        <button onClick={() => this.addTaskClick()}> Add Task </button>
-                        <button style={{backgroundColor: 'var(--warning-color)'}} onClick={this.hideAddTaskBar}> Cancel </button>
-                    </div>
+    const [onMount, ] = useState(0);
+
+    useEffect(() => {
+        $('#add-task').css("display", "none");
+        getTasks();
+    }, [onMount]);
+
+    return (
+        <div className="tasks">
+            <div className='content'>
+                <h2>Tasks</h2>
+                <ul>
+                    {tasks.filter(task => !task.completed).map(task =>
+                        <li key={task.id} onClick={() => choseTask(task.id)}>
+                            <button onClick={() => completeTask(task.id)}></button>
+                            <span>{task.title}</span>
+                            <span>{task.projectId || "-1"}</span>
+                        </li>
+                    )}
+                </ul>
+                <div id="add-task-suggestion" onClick={showAddTaskBar}>
+                    <span>+</span>
+                    <span>Add Task...</span>
                 </div>
-
-                {/* { this.state.showTaskPanel ? <TaskPanel showState={ this.state.showTaskPanel } task={ this.state.chosenTask }/> : null} */}
-                {/* { this.state.showTaskPanel ? <TaskPanel /> : null} */}
-                <TaskPanel projects={ this.props.projects } task={ this.state.chosenTask }/>
+                <div id="add-task">
+                    <div className='input-bar'>
+                        <input id="task-title" />
+                    </div>
+                    <br />
+                    <button onClick={() => addTaskClick()}> Add Task </button>
+                    <button style={{ backgroundColor: 'var(--warning-color)' }} onClick={hideAddTaskBar}> Cancel </button>
+                </div>
             </div>
-        )
-    }
+
+            {/* { this.state.showTaskPanel ? <TaskPanel showState={ this.state.showTaskPanel } task={ this.state.chosenTask }/> : null} */}
+            {/* { this.state.showTaskPanel ? <TaskPanel /> : null} */}
+            <TaskPanel projects={props.projects} task={chosenTask} updateTasks={getTasks} cleanChosen={() => setChosenTask(0)} />
+        </div>
+    )
 }
 
 export default Tasks;

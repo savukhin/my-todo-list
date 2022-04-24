@@ -1,4 +1,4 @@
-const { User, Task } = require('../Models/models')
+const { User, Task, Project } = require('../Models/models')
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
@@ -57,9 +57,10 @@ async function completeTask(req, res) {
     }
 
     var task = await Task.findOne({
-        id: taskId
+        where: {
+            id: taskId
+        }
     })
-    console.log(task);
 
     if (user.id != task.userId)
         return res.status(403);
@@ -70,8 +71,45 @@ async function completeTask(req, res) {
     return res.status(200).json({ data: "ok" });
 }
 
+async function changeTask(req, res) {
+    console.log(req.body);
+    let { task_id, project_id, title, token } = req.body;
+
+    var user;
+    try {
+        user = jwt.verify(token, JWT_SECRET);
+    } catch {
+        return res.status(400).json({ error: 'unvalid token' });
+    }
+
+
+    var task = await Task.findOne({
+        where: {
+            id: task_id
+        }
+    })
+
+    if (user.id != task.userId)
+        return res.status(403);
+    
+    var project = await Project.findOne({
+        where: {
+            id: project_id
+        }
+    })
+
+    if (!project)
+        return res.status(400).json({ error: "Project not found" });
+        
+    task.projectId = project.id;
+    task.title = title;
+    task.save();
+    return res.status(200).json({ data: "ok" });
+}
+
 module.exports = {
     getTasks,
     addTask,
-    completeTask
+    completeTask,
+    changeTask
 };

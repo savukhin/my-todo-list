@@ -17,6 +17,18 @@ router.post('/add',
     validatorCheck(),
     tasksController.addTask)
     
-router.post('/complete', tasksController.completeTask)
+router.post('/complete', 
+    body("taskId").isNumeric(),
+    checkToken(),
+    validatorCheck(),
+    tasksController.completeTask)
+
+router.post('/changeTask', 
+    body("task_id").isNumeric(),
+    body("project_id").isNumeric(),
+    body("title").isAscii(),
+    checkToken(),
+    validatorCheck(),
+    tasksController.changeTask)
 
 module.exports = router
