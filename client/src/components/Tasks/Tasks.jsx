@@ -128,7 +128,6 @@ class Tasks extends Component {
 
     choseTask(taskId) {
         let task = this.state.tasks.filter(elem => elem.id === taskId)[0];
-        console.log("chose Task", task);
         this.setState({ chosenTask: task })
 
         // return (
@@ -166,7 +165,7 @@ class Tasks extends Component {
 
                 {/* { this.state.showTaskPanel ? <TaskPanel showState={ this.state.showTaskPanel } task={ this.state.chosenTask }/> : null} */}
                 {/* { this.state.showTaskPanel ? <TaskPanel /> : null} */}
-                <TaskPanel task={ this.state.chosenTask }/>
+                <TaskPanel projects={ this.props.projects } task={ this.state.chosenTask }/>
             </div>
         )
     }

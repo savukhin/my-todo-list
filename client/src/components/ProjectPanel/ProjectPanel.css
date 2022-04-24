@@ -19,7 +19,7 @@
     align-items: center;
     padding: 15px;
     overflow: auto;
-    background-color: rgba(35, 39, 42, 0.8);
+    background-color: rgba(35, 35, 35, 0.4);
 }
 
 #project-panel .header {

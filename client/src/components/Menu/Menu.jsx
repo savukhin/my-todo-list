@@ -3,47 +3,7 @@ import './Menu.css'
 import $ from 'jquery';
 import ProjectPanel from '../ProjectPanel/ProjectPanel';
 
-function Menu() {
-        // super();
-    // this.state = {
-        // projects: [{ id: 1, title: "Health", isFavorite: true, color: "#ff0000" },
-        // { id: 2, title: "to-do-list", isFavorite: true, color: "#00ff00" },
-        // { id: 3, title: "Study", isFavorite: false, color: "#ff00ff" }]
-    // }
-    // $('#add-task').css("display", "none");
-    const [projects, setProjects] = useState(
-        [{ id: 1, title: "Health", isFavorite: true, color: "#ff0000" },
-        { id: 2, title: "to-do-list", isFavorite: true, color: "#00ff00" },
-        { id: 3, title: "Study", isFavorite: false, color: "#ff00ff" }]
-    );
-
-    function getProjects() {
-        const req = {
-            token: localStorage.getItem('token')
-        }
-
-        fetch('/api/projects/get', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(req)
-        })
-        .then((res) => {
-            if (res.status >= 200 && res.status < 300) {
-                return res;
-            } else {
-                let error = new Error(res.statusText);
-                error.response = res;
-                throw error;
-            }
-        })
-        .then (res => res.json())
-        .then(res => {
-            setProjects(res.data);
-        });
-    }
-
+function Menu(props) {
     function printProjects(projects) {
         return (
             <div className="projects-panel">
@@ -95,8 +55,6 @@ function Menu() {
     
     })
 
-    getProjects();
-
     return (
         <div className="menu">
             <h2>Menu</h2>
@@ -115,7 +73,7 @@ function Menu() {
             <div id="favorite_projects">
                 <div className="favorites">
                     {printProjects(
-                        projects.filter(project => project.isFavorite)
+                        props.projects.filter(project => project.isFavorite)
                     )}
                 </div>
             </div>
@@ -125,11 +83,11 @@ function Menu() {
                 <span> All projects </span>
             </div>
             <div id="all_projects">
-                {printProjects(projects)}
+                {printProjects(props.projects)}
             </div>
             <div style={{marginLeft: "15%", width: "70%"}} className="button" onClick={showAddProject}>+</div>
 
-            <ProjectPanel updateProject={getProjects}/>
+            <ProjectPanel updateProject={props.getProjects}/>
         </div>
     )
 }

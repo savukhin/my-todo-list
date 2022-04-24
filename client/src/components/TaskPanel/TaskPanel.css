@@ -29,3 +29,28 @@
 #task-panel .content > * {
     margin-top: 10px;
 }
+
+#task-panel hr {
+    width: 100%;
+}
+
+#task-project:after {
+    content: " ";
+  position: absolute;
+  bottom: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+}
+
+#task-project {
+    position: absolute;
+    /* top: 50%; */
+    transform: translateY(20%);
+}
+
+#task-panel .project-tab {
+
+}

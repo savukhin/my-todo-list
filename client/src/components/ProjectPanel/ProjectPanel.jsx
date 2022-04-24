@@ -47,7 +47,6 @@ function ProjectPanel(props) {
     }
 
     function outerClick(event) {
-        console.log(event);
         if (event.target === event.currentTarget)
             hidePanel();
     }

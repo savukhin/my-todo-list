@@ -10,7 +10,41 @@ class TodoListPage extends Component {
     super()
     this.state = {
       user: props.user,
+      projects: [{ id: 1, title: "Health", isFavorite: true, color: "#ff0000" },
+      { id: 2, title: "to-do-list", isFavorite: true, color: "#00ff00" },
+      { id: 3, title: "Study", isFavorite: false, color: "#ff00ff" }]
     }
+  }
+
+  getProjects() {
+    const req = {
+      token: localStorage.getItem('token')
+    }
+
+    fetch('/api/projects/get', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req)
+    })
+      .then((res) => {
+        if (res.status >= 200 && res.status < 300) {
+          return res;
+        } else {
+          let error = new Error(res.statusText);
+          error.response = res;
+          throw error;
+        }
+      })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({ projects: res.data });
+      });
+  }
+
+  componentDidMount() {
+    this.getProjects();
   }
 
   render() {
@@ -18,8 +52,8 @@ class TodoListPage extends Component {
       <div>
         <div className="wrapper">
           <Navbar />
-          <Menu />
-          <Tasks />
+          <Menu projects={this.state.projects} getProjects={this.getProjects} />
+          <Tasks projects={this.state.projects} />
         </div>
       </div>
     );
