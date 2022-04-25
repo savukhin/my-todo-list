@@ -10,6 +10,18 @@ router.post('/get',
     validatorCheck(),
     tasksController.getTasks)
 
+router.post('/get/category', 
+    body("token", "Must have token").matches(/^.+\..+\..+$/, "invalid token type"),
+    body("category").isIn(['incoming', 'today']),
+    validatorCheck(),
+    tasksController.getTasksByCategory)
+
+router.post('/get/project', 
+    body("token", "Must have token").matches(/^.+\..+\..+$/, "invalid token type"),
+    // body("project").isNumeric(),
+    validatorCheck(),
+    tasksController.getTasksByProject)
+
 router.post('/add', 
     body("title").isAscii(),
     body("description").exists(),

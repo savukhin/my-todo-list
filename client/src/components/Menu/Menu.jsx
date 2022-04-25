@@ -2,26 +2,29 @@ import React, { Component, useEffect, useState } from 'react';
 import './Menu.css'
 import $ from 'jquery';
 import ProjectPanel from '../ProjectPanel/ProjectPanel';
+import { Link, NavLink } from 'react-router-dom'
 
-function Menu(props) {
+const Menu = ({ projects, getProjects }) => {
     function printProjects(projects) {
         return (
             <div className="projects-panel">
                 {projects.map(project =>
-                    <div key={ project.id } className="project-tab">
-                        <div className="project-name">
-                            <span className="project-dot">
-                                <svg width="20" viewBox="0 0 20 20">
-                                    <circle cx="10" cy="10" r="5" fill={ project.color }/>
-                                </svg>
-                            </span>
+                    <Link key={ project.id } to={"/app/project/" + project.id}>
+                        <div  className="project-tab">
+                            <div className="project-name">
+                                <span className="project-dot">
+                                    <svg width="20" viewBox="0 0 20 20">
+                                        <circle cx="10" cy="10" r="5" fill={ project.color }/>
+                                    </svg>
+                                </span>
 
-                            <span> {project.title} </span>
+                                <span> {project.title} </span>
+                            </div>
+                            <div className="project-misc">
+                                <span>1</span>
+                            </div>
                         </div>
-                        <div className="project-misc">
-                            <span>1</span>
-                        </div>
-                    </div>
+                    </Link> 
                 )}
             </div>
         )
@@ -59,10 +62,10 @@ function Menu(props) {
         <div className="menu">
             <h2>Menu</h2>
             <div className="projects-panel">
-                <div className="project-tab"> <div className='project-name'> <span> Incoming </span> </div> </div>
-                <div className="project-tab"> <div className='project-name'> <span> Today </span> </div> </div>
-                <div className="project-tab"> <div className='project-name'> <span> Upcoming </span> </div> </div>
-                <div className="project-tab"> <div className='project-name'> <span> Filters </span> </div> </div> 
+                <Link to={{ pathname:"/app/incoming/"}}> <div className="project-tab"> <div className='project-name'> <span> Incoming </span> </div> </div> </Link>
+                <div className="project-tab warning"> <div className='project-name'> <span> Today </span> </div> </div>
+                <div className="project-tab warning"> <div className='project-name'> <span> Upcoming </span> </div> </div>
+                <div className="project-tab warning"> <div className='project-name'> <span> Filters </span> </div> </div> 
             </div>
 
             <div className="expansion-panel" onClick={() => hideExpansion("favorite_projects")}>
@@ -73,7 +76,7 @@ function Menu(props) {
             <div id="favorite_projects">
                 <div className="favorites">
                     {printProjects(
-                        props.projects.filter(project => project.isFavorite)
+                        projects.filter(project => project.isFavorite)
                     )}
                 </div>
             </div>
@@ -83,11 +86,11 @@ function Menu(props) {
                 <span> All projects </span>
             </div>
             <div id="all_projects">
-                {printProjects(props.projects)}
+                {printProjects(projects)}
             </div>
             <div style={{marginLeft: "15%", width: "70%"}} className="button" onClick={showAddProject}>+</div>
 
-            <ProjectPanel updateProject={props.getProjects}/>
+            <ProjectPanel updateProject={getProjects}/>
         </div>
     )
 }

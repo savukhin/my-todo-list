@@ -3,8 +3,8 @@ import './Tasks.css'
 import $ from 'jquery'
 import TaskPanel from '../TaskPanel/TaskPanel';
 
-function Tasks(props) {
-    const [tasks, setTasks] = useState([]);
+const Tasks = ({ projects, tasks, getTasks, addTask }) => {
+    
     const [user, setUser] = useState({ username: "Sava" });
     let [chosenTask, setChosenTask] = useState(false);
 
@@ -16,65 +16,6 @@ function Tasks(props) {
     function hideAddTaskBar() {
         $(`#add-task-suggestion`).css("display", "");
         $(`#add-task`).css("display", "none");
-    }
-
-    function getTasks() {
-        const req = {
-            token: localStorage.getItem('token')
-        }
-
-        fetch('/api/tasks/get', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(req)
-        })
-            .then((res) => {
-                if (res.status >= 200 && res.status < 300) {
-                    return res;
-                } else {
-                    let error = new Error(res.statusText);
-                    error.response = res;
-                    throw error;
-                }
-            })
-            .then(res => res.json())
-            .then(res => {
-                console.log(res.data);
-                // this.setState({ tasks: res.data });
-                setTasks(res.data);
-            });
-    }
-
-
-    function addTask(title) {
-        const req = {
-            token: localStorage.getItem('token'),
-            title: title,
-            description: "",
-        }
-
-        fetch('/api/tasks/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(req)
-        })
-            .then((res) => {
-                if (res.status >= 200 && res.status < 300) {
-                    return res;
-                } else {
-                    let error = new Error(res.statusText);
-                    error.response = res;
-                    throw error;
-                }
-            })
-            .then(res => res.json())
-            .then(res => {
-                getTasks();
-            });
     }
 
     function addTaskClick() {
@@ -155,7 +96,7 @@ function Tasks(props) {
 
             {/* { this.state.showTaskPanel ? <TaskPanel showState={ this.state.showTaskPanel } task={ this.state.chosenTask }/> : null} */}
             {/* { this.state.showTaskPanel ? <TaskPanel /> : null} */}
-            <TaskPanel projects={props.projects} task={chosenTask} updateTasks={getTasks} cleanChosen={() => setChosenTask(0)} />
+            <TaskPanel projects={projects} task={chosenTask} updateTasks={getTasks} cleanChosen={() => setChosenTask(0)} />
         </div>
     )
 }

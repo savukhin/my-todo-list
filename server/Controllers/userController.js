@@ -49,8 +49,8 @@ async function login(req, res) {
 
     if (!user)
         return res.status(400).json({ error: 'User not found' });
-
-    res.json({ token: generateToken(user) });
+    
+    return res.json({ token: generateToken(user) });
 }
 
 async function checkToken(req, res) {

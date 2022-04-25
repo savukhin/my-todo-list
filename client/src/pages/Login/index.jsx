@@ -33,6 +33,7 @@ const LoginPage = (props) => {
             })
         .then(res => res.json())
         .then(res => {
+            localStorage.setItem('token', res.token);
             navigator('/');
             navigator(0);
         }).catch(error => {

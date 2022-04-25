@@ -7,6 +7,10 @@ class Navbar extends Component {
         
     }
 
+    componentDidMount() {
+        console.log("Navbar mounted");
+    }
+
     render() {
         return (
             <div className="navbar">

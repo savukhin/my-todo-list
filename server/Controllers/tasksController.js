@@ -26,6 +26,64 @@ async function getTasks(req, res) {
     return res.status(200).json({ data: tasks });
 }
 
+async function getTasksByCategory(req, res) {
+    var { token } = req.body;
+
+    var user;
+    try {
+        user = jwt.verify(token, JWT_SECRET);
+    } catch {
+        return res.status(400).json({ error: 'unvalid token' });
+    }
+
+    var tasks = await Task.findAll({
+        include: [{
+            model: User,
+            where: {
+                id: user.id,
+            }
+        },
+        ],
+        where: {
+            projectId: null
+        },
+        raw: true
+    })
+
+    return res.status(200).json({ data: tasks });
+}
+
+async function getTasksByProject(req, res) {
+    var { token, project } = req.body;
+
+    var user;
+    try {
+        user = jwt.verify(token, JWT_SECRET);
+    } catch {
+        return res.status(400).json({ error: 'unvalid token' });
+    }
+
+    // console.log(user, req.body.category);
+
+    var tasks = await Task.findAll({
+        include: [{
+            model: User,
+            where: {
+                id: user.id,
+            }
+        },
+        ],
+        where: {
+            projectId: project
+        },
+        raw: true
+    })
+
+    console.log(tasks);
+
+    return res.status(200).json({ data: tasks });
+}
+
 async function addTask(req, res) {
     var { token, title, description } = req.body;
 
@@ -91,7 +149,7 @@ async function changeTask(req, res) {
 
     if (user.id != task.userId)
         return res.status(403);
-    
+
     var project = await Project.findOne({
         where: {
             id: project_id
@@ -100,7 +158,7 @@ async function changeTask(req, res) {
 
     if (!project)
         return res.status(400).json({ error: "Project not found" });
-        
+
     task.projectId = project.id;
     task.title = title;
     task.save();
@@ -109,6 +167,8 @@ async function changeTask(req, res) {
 
 module.exports = {
     getTasks,
+    getTasksByCategory,
+    getTasksByProject,
     addTask,
     completeTask,
     changeTask

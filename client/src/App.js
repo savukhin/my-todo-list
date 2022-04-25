@@ -4,25 +4,20 @@ import TodoListPage from './pages/TodoList';
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './pages/Login';
 import ChangePasswordPage from './pages/ChangePassword';
-import { Component } from 'react';
+import { Component, useEffect, useState } from 'react';
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      user: false,
-      isLoggedIn: false,
-      isLoading: true
-    }
+const App = () => {
+  const [user, setUser] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-    // this.auth();
-  }
+  const [mount, ] = useState(0);
 
-  componentDidMount() {
-    this.auth();
-  }
+  useEffect(() => {
+    auth();
+  }, [mount]);
 
-  auth() {
+  const auth = () => {
     const req = {
       token: localStorage.getItem('token')
   }
@@ -44,35 +39,45 @@ class App extends Component {
       })
       .then (res => res.json())
       .then(res => {
-          this.setState({ isLoading: false, isLoggedIn: true, user: res.user });
+          setIsLoading(false); 
+          setIsLoggedIn(true);
+          setUser(res.user);
       }).catch(error => {
-        this.setState({ isLoading: false, isLoggedIn: false, user: false });
+        setIsLoading(false); 
+        setIsLoggedIn(false);
+        setUser(false);
       });
   }
 
-  generateLogRoute(path, component, redirect, loggedConditional=true) {
+  const generateLogRoute = (path, component, redirect, loggedConditional=true, rest) => {
     return (
-      <Route exact path={ path } element={this.state.isLoggedIn === loggedConditional
-        ? component : (this.state.isLoading ? 'Loading...' : <Navigate to={redirect} />) }></Route>
+      <Route exact path={ path } element={isLoggedIn === loggedConditional
+        ? component : (isLoading ? 'Loading...' : <Navigate to={redirect} />) } {...rest}></Route>
     )
   }
 
-  render() {
-    return (
-      <div className="App">
-        <BrowserRouter>
-          <Routes>
-            { this.generateLogRoute("/reg", <RegistrationPage authCallback={ this.auth }/>, "/", false) }
-            { this.generateLogRoute("/login", <LoginPage authCallback={ this.auth }/>, "/", false) }
+  return (
+    <div className="App">
+      <BrowserRouter >
+        <Routes>
+          { generateLogRoute("/reg", <RegistrationPage authCallback={ auth }/>, "/", false) }
+          { generateLogRoute("/login", <LoginPage authCallback={ auth }/>, "/", false) }
 
-            { this.generateLogRoute("/change-password", <ChangePasswordPage user={this.state.user} />, "/login", true) }
-            { this.generateLogRoute("/", <TodoListPage user={this.state.user} />, "/login", true) }
-            { this.generateLogRoute("/app", <TodoListPage user={this.state.user} />, "/login", true) }
-          </Routes>
-        </BrowserRouter>
-      </div>
-    );
-  }
+          { generateLogRoute("/change-password", <ChangePasswordPage user={user} />, "/login", true) }
+          { ["/app", "/"].map((path, key) =>
+            generateLogRoute(path, <Navigate to="/app/incoming"/>, "/login", true, {key:key})) }
+
+          {/* { this.generateLogRoute("/app/:projectCategory", <TodoListPage user={this.state.user} isCategory={true}/>, "/login", true) } */}
+          { generateLogRoute("/app/:projectCategory", <TodoListPage user={user} isCategory={true} />, "/login", true) }
+          { generateLogRoute("/app/project/:projectId", <TodoListPage user={user} />, "/login", true) }
+
+          {/* <Route exact path={ "/app/:project" } element={this.state.isLoggedIn
+            ? <TodoListPage user={this.state.user} /> 
+            : (this.state.isLoading ? 'Loading...' : <Navigate to={"login"} />) }></Route> */}
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
