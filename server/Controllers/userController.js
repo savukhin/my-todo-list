@@ -54,30 +54,10 @@ async function login(req, res) {
 }
 
 async function checkToken(req, res) {
-    let { token } = req.body;
+    if (!req.user)
+        return res.status(400).json({ error: 'Invalide token!' });
 
-    let verification;
-    try {
-        verification = jwt.verify(token, JWT_SECRET);
-    } catch {
-        return res.status(400).json({ error: 'unvalid token' });
-    }
-    
-    let user;
-    try {
-        user = await User.findOne({
-            where: {
-                id: verification.id
-            }
-        });
-    } catch (error) {
-        return res.status(400).json({ error: 'User not found' });
-    }
-
-    if (!user)
-        return res.status(400).json({ error: 'User not found' });
-
-    res.status(200).json({ user });
+    return res.status(200).json({ user: req.user });
 }
 
 async function changePassword(req, res) {

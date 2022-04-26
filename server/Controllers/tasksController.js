@@ -4,20 +4,11 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
 
 async function getTasks(req, res) {
-    var { token } = req.body;
-
-    var user;
-    try {
-        user = jwt.verify(token, JWT_SECRET);
-    } catch {
-        return res.status(400).json({ error: 'unvalid token' });
-    }
-
     var tasks = await Task.findAll({
         include: {
             model: User,
             where: {
-                id: user.id
+                id: req.user.id
             }
         },
         raw: true
@@ -27,20 +18,11 @@ async function getTasks(req, res) {
 }
 
 async function getTasksByCategory(req, res) {
-    var { token } = req.body;
-
-    var user;
-    try {
-        user = jwt.verify(token, JWT_SECRET);
-    } catch {
-        return res.status(400).json({ error: 'unvalid token' });
-    }
-
     var tasks = await Task.findAll({
         include: [{
             model: User,
             where: {
-                id: user.id,
+                id: req.user.id,
             }
         },
         ],
@@ -54,22 +36,13 @@ async function getTasksByCategory(req, res) {
 }
 
 async function getTasksByProject(req, res) {
-    var { token, project } = req.body;
-
-    var user;
-    try {
-        user = jwt.verify(token, JWT_SECRET);
-    } catch {
-        return res.status(400).json({ error: 'unvalid token' });
-    }
-
-    // console.log(user, req.body.category);
+    var { project } = req.body;
 
     var tasks = await Task.findAll({
         include: [{
             model: User,
             where: {
-                id: user.id,
+                id: req.user.id,
             }
         },
         ],
@@ -79,40 +52,23 @@ async function getTasksByProject(req, res) {
         raw: true
     })
 
-    // console.log(tasks);
-
     return res.status(200).json({ data: tasks });
 }
 
 async function addTask(req, res) {
-    var { token, title, description } = req.body;
+    let { title, description } = req.body;
 
-    var user;
-    try {
-        user = jwt.verify(token, JWT_SECRET);
-    } catch {
-        return res.status(400).json({ error: 'unvalid token' });
-    }
-
-    var tasks = await Task.create({
+    let task = await Task.create({
         title: title,
         description: description,
-        userId: user.id,
+        userId: req.user.id,
     })
 
-    // console.log(tasks);
     return res.status(200).json({ data: "ok" });
 }
 
 async function completeTask(req, res) {
-    var { token, taskId } = req.body;
-
-    var user;
-    try {
-        user = jwt.verify(token, JWT_SECRET);
-    } catch {
-        return res.status(400).json({ error: 'unvalid token' });
-    }
+    var { taskId } = req.body;
 
     var task = await Task.findOne({
         where: {
@@ -120,7 +76,7 @@ async function completeTask(req, res) {
         }
     })
 
-    if (user.id != task.userId)
+    if (req.user.id != task.userId)
         return res.status(403);
 
     task.completed = true;
@@ -130,16 +86,7 @@ async function completeTask(req, res) {
 }
 
 async function changeTask(req, res) {
-    // console.log(req.body);
-    let { task_id, project_id, title, token } = req.body;
-
-    var user;
-    try {
-        user = jwt.verify(token, JWT_SECRET);
-    } catch {
-        return res.status(400).json({ error: 'unvalid token' });
-    }
-
+    let { task_id, project_id, title } = req.body;
 
     var task = await Task.findOne({
         where: {
@@ -147,7 +94,7 @@ async function changeTask(req, res) {
         }
     })
 
-    if (user.id != task.userId)
+    if (req.user.id != task.userId)
         return res.status(403);
 
     var project = await Project.findOne({
@@ -162,6 +109,7 @@ async function changeTask(req, res) {
     task.projectId = project.id;
     task.title = title;
     task.save();
+
     return res.status(200).json({ data: "ok" });
 }
 

@@ -13,15 +13,15 @@ const confirmPassword = () =>
         return true;
     })
 
-const checkToken = () => body("token", "Must have token").matches(/^.+\..+\..+$/, "invalid token type");
-
-const isColor = (param, msg) => body(param, msg).matches(/^#[0-9a-f]{3,6}$/);
-
-const isAuthenticated = () => {
+const checkToken = () => {
     return (req, res, next) => {
-        
+        if (!req.user)
+            return res.status(400).json({ error: 'unvalid token' });
+        return next();
     }
 }
+
+const isColor = (param, msg) => body(param, msg).matches(/^#[0-9a-f]{3,6}$/);
 
 module.exports = {
     checkPassword, 

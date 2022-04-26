@@ -4,20 +4,11 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
 
 async function getProjects(req, res) {
-    var { token } = req.body;
-
-    var user;
-    try {
-        user = jwt.verify(token, JWT_SECRET);
-    } catch {
-        return res.status(400).json({ error: 'unvalid token' });
-    }
-
     var projects = await Project.findAll({
         include: {
             model: User,
             where: {
-                id: user.id
+                id: req.user.id
             }
         },
         raw: true
@@ -27,21 +18,13 @@ async function getProjects(req, res) {
 }
 
 async function addProject(req, res) {
-    var { token, title, color } = req.body;
-
-    var user;
-    try {
-        user = jwt.verify(token, JWT_SECRET);
-    } catch {
-        return res.status(400).json({ error: 'unvalid token' });
-    }
+    var { title, color } = req.body;
 
     var project = await Project.create({
         title: title,
         color: color,
-        userId: user.id,
+        userId: req.user.id,
     })
-    console.log(project);
 
     return res.status(200).json({ data: "ok" });
 }
