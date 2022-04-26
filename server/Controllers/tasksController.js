@@ -79,7 +79,7 @@ async function getTasksByProject(req, res) {
         raw: true
     })
 
-    console.log(tasks);
+    // console.log(tasks);
 
     return res.status(200).json({ data: tasks });
 }
@@ -100,7 +100,7 @@ async function addTask(req, res) {
         userId: user.id,
     })
 
-    console.log(tasks);
+    // console.log(tasks);
     return res.status(200).json({ data: "ok" });
 }
 
@@ -130,7 +130,7 @@ async function completeTask(req, res) {
 }
 
 async function changeTask(req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     let { task_id, project_id, title, token } = req.body;
 
     var user;

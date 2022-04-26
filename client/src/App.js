@@ -5,6 +5,7 @@ import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './pages/Login';
 import ChangePasswordPage from './pages/ChangePassword';
 import { Component, useEffect, useState } from 'react';
+import Page404 from './pages/ResponsePages/Page404';
 
 const App = () => {
   const [user, setUser] = useState(false);
@@ -51,7 +52,7 @@ const App = () => {
 
   const generateLogRoute = (path, component, redirect, loggedConditional=true, rest) => {
     return (
-      <Route exact path={ path } element={isLoggedIn === loggedConditional
+      <Route path={ path } element={isLoggedIn === loggedConditional
         ? component : (isLoading ? 'Loading...' : <Navigate to={redirect} />) } {...rest}></Route>
     )
   }
@@ -71,9 +72,7 @@ const App = () => {
           { generateLogRoute("/app/:projectCategory", <TodoListPage user={user} isCategory={true} />, "/login", true) }
           { generateLogRoute("/app/project/:projectId", <TodoListPage user={user} />, "/login", true) }
 
-          {/* <Route exact path={ "/app/:project" } element={this.state.isLoggedIn
-            ? <TodoListPage user={this.state.user} /> 
-            : (this.state.isLoading ? 'Loading...' : <Navigate to={"login"} />) }></Route> */}
+          <Route path="*" element={<Page404 />} />
         </Routes>
       </BrowserRouter>
     </div>
