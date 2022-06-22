@@ -86,7 +86,7 @@ async function completeTask(req, res) {
 }
 
 async function changeTask(req, res) {
-    let { task_id, project_id, title } = req.body;
+    let { task_id, project_id, priority, title } = req.body;
 
     var task = await Task.findOne({
         where: {
@@ -107,6 +107,7 @@ async function changeTask(req, res) {
         return res.status(400).json({ error: "Project not found" });
 
     task.projectId = project.id;
+    task.priority = priority;
     task.title = title;
     task.save();
 

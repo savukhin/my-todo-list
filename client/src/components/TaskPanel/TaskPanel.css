@@ -34,21 +34,9 @@
     width: 100%;
 }
 
-#task-project:after {
-    content: " ";
-  position: absolute;
-  bottom: 100%; /* At the bottom of the tooltip */
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent black transparent;
-}
-
-#task-project {
+#task-priority {
     position: absolute;
-    /* top: 50%; */
-    transform: translateY(20%);
+    transform: translate(400px, -50px);
 }
 
 #task-panel .project-tab {

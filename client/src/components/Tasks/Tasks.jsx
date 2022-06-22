@@ -67,6 +67,13 @@ const Tasks = ({ projects, tasks, getTasks, addTask }) => {
         getTasks();
     }, [onMount]);
 
+    let priorityToColor = {
+        0: "white",
+        1: "blue",
+        2: "yellow",
+        3: "red",
+    }
+
     return (
         <div className="tasks">
             <div className='content'>
@@ -74,9 +81,8 @@ const Tasks = ({ projects, tasks, getTasks, addTask }) => {
                 <ul>
                     {tasks.filter(task => !task.completed).map(task =>
                         <li key={task.id} onClick={() => choseTask(task.id)}>
-                            <button onClick={() => completeTask(task.id)}></button>
+                            <button onClick={() => completeTask(task.id)} style={{borderColor : priorityToColor[task.priority]}}></button>
                             <span>{task.title}</span>
-                            <span>{task.projectId || "-1"}</span>
                         </li>
                     )}
                 </ul>
@@ -94,9 +100,7 @@ const Tasks = ({ projects, tasks, getTasks, addTask }) => {
                 </div>
             </div>
 
-            {/* { this.state.showTaskPanel ? <TaskPanel showState={ this.state.showTaskPanel } task={ this.state.chosenTask }/> : null} */}
-            {/* { this.state.showTaskPanel ? <TaskPanel /> : null} */}
-            <TaskPanel projects={projects} task={chosenTask} updateTasks={getTasks} cleanChosen={() => setChosenTask(0)} />
+            <TaskPanel projects={projects} task={chosenTask} updateTasks={getTasks} cleanChosen={() => setChosenTask(null)} />
         </div>
     )
 }

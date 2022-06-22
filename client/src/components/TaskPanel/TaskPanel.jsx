@@ -1,25 +1,17 @@
 import "./TaskPanel.css";
 import $ from 'jquery';
-import { useEffect } from 'react';
-import Select from 'react-select';
+import { useEffect, useState } from 'react';
+import PopupSelect from "../Basic Components/PopupSelect/PopupSelect";
 
-function TaskPanel(props) {
+function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
+    const [chosenProject, setChosenProject] = useState(null);
+    const [chosenPriority, setChosenPriority] = useState(null);
+
     function hidePanel() {
-        $('#edit-task-container')
-            .css("display", "none");
+        cleanChosen();
     }
 
-    function showPanel() {
-        $('#edit-task-container')
-            .css("display", "");
-    }
-
-    useEffect(() => {
-        if (props.task != null && props.task !== false)
-            showPanel();
-    })
-
-    if (!props.task || props.task == null || props.task === false)
+    if (!task || task == null || task === false)
         return (<></>);
 
     function outerClick(event) {
@@ -27,106 +19,13 @@ function TaskPanel(props) {
             hidePanel();
     }
 
-    let selectOptions = [];
-    props.projects.map(project =>
-        selectOptions.push({
-            label:
-                <div className="project-tab">
-                    <div className="project-name">
-                        <span className="project-dot">
-                            <svg width="20" viewBox="0 0 20 20">
-                                <circle cx="10" cy="10" r="5" fill={project.color} />
-                            </svg>
-                        </span>
-                        <span>{project.title}</span>
-                    </div>
-                </div>,
-            value: project.title,
-            project_id: project.id
-        })
-    )
-
-    function hideProjectSelect() {
-        $("#task-project").css("display", "none");
-    }
-
-    function showProjectSelect() {
-        $("#task-project").css("display", "");
-    }
-
-    function toggleProjectSelect(event) {
-        if ($("#task-project").css("display") === "none")
-            showProjectSelect()
-        else
-            hideProjectSelect()
-    }
-
-    const styles = {
-        container: (provided, state) => ({
-            ...provided,
-            width: "300px",
-            maxHeight: "100px",
-        }),
-        input: (provided, state) => ({
-            ...provided,
-            color: "var(--text-color)",
-        }),
-        control: (provided, state) => ({
-            ...provided,
-            backgroundColor: "var(--second-bg-color)",
-            color: "var(--text-color)",
-        }),
-        indicatorSeparator: (provided, state) => ({
-            ...provided,
-            backgroundColor: "var(--text-color)",
-        }),
-        menu: (provided, state) => ({
-            ...provided,
-            backgroundColor: "var(--frame-color)",
-        }),
-        option: (provided, state) => ({
-            ...provided,
-            backgroundColor: "var(--second-bg-color)",
-            fontSize: state.selectProps.myFontSize
-        }),
-        singleValue: (provided, state) => ({
-            ...provided,
-            backgroundColor: "var(--second-bg-color)",
-            color: "var(--text-color)",
-        })
-    };
-
-    let selectRef = null;
-    let chosenProject = null;
-
-    function selectProject(event) {
-        if (event === null)
-            return;
-
-        let project = props.projects.filter(
-            elem => elem.id === event.project_id
-        )[0];
-
-        chosenProject = project;
-
-        $(`#task-project-title`).html(project.title);
-        $(`#task-project-svg`).html(`
-                <svg width="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="5" fill="${project.color}" />
-                </svg>
-        `);
-
-        setTimeout(() => selectRef.clearValue(), 0);
-
-        hideProjectSelect();
-    }
-
-    function sendRequest(task_id, project_id, title) {
+    function sendRequest(task_id, project_id, priority, title) {
         const req = {
             token: localStorage.getItem('token'),
             title,
             task_id,
-            project_id
+            project_id,
+            priority
         }
         console.log(req);
 
@@ -149,69 +48,82 @@ function TaskPanel(props) {
             .then(res => res.json())
             .then(res => {
                 hidePanel();
-                props.updateTasks();
+                updateTasks();
             })
             .catch(error => {
             });
     }
 
     function sendRequestClick() {
-        let task_id = props.task.id;
-        let project_id;
-        if (chosenProject == null)
-            project_id = "null";
-        else
-            project_id = chosenProject.id;
+        let task_id = task.id;
+        let project_id = (chosenProject ? chosenProject : task.projectId);
+        let priority = (chosenPriority ? chosenPriority : task.priority);
         let title = $('#task-change-title').val();
-        sendRequest(task_id, project_id, title);
+            
+        sendRequest(task_id, project_id, priority, title);
 
-        props.cleanChosen();
+        cleanChosen();
     }
 
     return (
-        <div id="edit-task-container" className="central-panel-container" onClick={outerClick} style={{ "display": "none" }}>
+        <div id="edit-task-container" className="central-panel-container" onClick={outerClick}>
             <div id="task-panel">
                 <div className='header'>
-                    Edit task '{props.task.title}'
+                    Edit task '{task.title}'
                 </div>
                 <div className='content'>
                     <div>
                         <label htmlFor='task-change-title'>Title</label>
-                        <input id="task-change-title" value={props.task.title} onChange={() => { }}></input>
+                        <input id="task-change-title" value={task.title} onChange={() => { }}></input>
                     </div>
                     <hr />
                     <div>
-                        <label htmlFor='task-project'>Project</label>
-                        <div className="button" onClick={toggleProjectSelect}>
-                            <div id="task-project-chose" className="project-tab">
-                                <div className="project-name">
-                                    <span id="task-project-svg" className="project-dot">
-                                        {props.projects.filter(elem => elem.id === props.task.projectId).length > 0
-                                            ? <svg width="20" viewBox="0 0 20 20">
-                                                <circle cx="10" cy="10" r="5" fill={props.projects.filter(elem => elem.id === props.task.projectId)[0].color} />
-                                            </svg>
-                                            : <></>}
+                        <label>Project</label>
+                        <PopupSelect
+                            icons={
+                                projects.map((project, key) =>
+                                    <span key={key} className="project-dot">
+                                        <svg width="20" viewBox="0 0 20 20">
+                                            <circle cx="10" cy="10" r="5" fill={project.color} />
+                                        </svg>
                                     </span>
-                                    <span id="task-project-title">
-                                    {props.projects.filter(elem => elem.id === props.task.projectId).length > 0
-                                        ? props.projects.filter(elem => elem.id === props.task.projectId)[0].title
-                                        : <>No project</> }
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="task-project" style={{ "display": "none" }}>
-                            <Select
-                                ref={ref => {
-                                    selectRef = ref;
-                                }}
-                                myFontSize="20px"
-                                styles={styles}
-                                options={selectOptions}
-                                onChange={selectProject}
-                            />
-                        </div>
+                                )
+                            }
+                            titles={projects.map(project => project.title)}
+                            keys={projects.map(project => project.id)}
+                            setter={setChosenProject}
+                            default_key={task.projectId}
+                        />
+                    </div>
 
+                    <hr />
+                    <div>
+                        <label>Priority</label>
+                        <PopupSelect
+                            icons={
+                                ['red', 'yellow', 'blue', 'white'].map((project, key) =>
+                                    <span key={key} className="project-dot">
+                                        <svg width="20" viewBox="0 0 20 20">
+                                            <path d="M4.223 4.584A.5.5 0 004 
+                                                5v14.5a.5.5 0 001 0v-5.723C5.886 
+                                                13.262 7.05 13 8.5 13c.97 0 1.704.178 
+                                                3.342.724 1.737.58 2.545.776 3.658.776 
+                                                1.759 0 3.187-.357 4.277-1.084A.5.5 0 
+                                                0020 13V4.5a.5.5 0 00-.777-.416C18.313 
+                                                4.69 17.075 5 15.5 5c-.97 
+                                                0-1.704-.178-3.342-.724C10.421 3.696
+                                                9.613 3.5 8.5 3.5c-1.758 0-3.187.357-4.277 
+                                                1.084z" 
+                                            fill={project}></path>
+                                        </svg>
+                                    </span>
+                                )
+                            }
+                            titles={[...Array(4).keys()].map(num => "Priority " + num).reverse()}
+                            keys={[3, 2, 1, 0]}
+                            setter={setChosenPriority}
+                            default_key={task.priority}
+                        />
                     </div>
                     <button className="button accept" onClick={sendRequestClick} > Change task </button>
                     <button className="button warning" onClick={hidePanel}> Cancel </button>
