@@ -97,16 +97,21 @@ async function changeTask(req, res) {
     if (req.user.id != task.userId)
         return res.status(403);
 
-    var project = await Project.findOne({
-        where: {
-            id: project_id
-        }
-    })
 
-    if (!project)
-        return res.status(400).json({ error: "Project not found" });
+    if (project_id != -1) {
+        var project = await Project.findOne({
+            where: {
+                id: project_id
+            }
+        })
 
-    task.projectId = project.id;
+        if (!project)
+            return res.status(400).json({ error: "Project not found" });
+
+        task.projectId = project.id;
+    } else {
+        task.projectId = null;
+    }
     task.priority = priority;
     task.title = title;
     task.save();

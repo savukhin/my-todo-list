@@ -80,19 +80,19 @@ function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
                     <div>
                         <label>Project</label>
                         <PopupSelect
-                            icons={
-                                projects.map((project, key) =>
+                            icons={[<></>,
+                                ...projects.map((project, key) =>
                                     <span key={key} className="project-dot">
                                         <svg width="20" viewBox="0 0 20 20">
                                             <circle cx="10" cy="10" r="5" fill={project.color} />
                                         </svg>
                                     </span>
-                                )
+                                )]
                             }
-                            titles={projects.map(project => project.title)}
-                            keys={projects.map(project => project.id)}
+                            titles={["No project", ...projects.map(project => project.title)]}
+                            keys={["-1", ...projects.map(project => project.id)]}
                             setter={setChosenProject}
-                            default_key={task.projectId}
+                            default_key={task.projectId ? task.projectId : "null"}
                         />
                     </div>
 
