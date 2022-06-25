@@ -20,7 +20,9 @@ const Task = sequelize.define('task', {
     title: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.STRING },
     completed: { type: DataTypes.BOOLEAN, defaultValue: false },
-    priority: { type: DataTypes.INTEGER, defaultValue: 0}
+    priority: { type: DataTypes.INTEGER, defaultValue: 0},
+    deadlineDate: { type: DataTypes.DATE, allowNull: true, defaultValue: null },
+    deadlineTime: { type: DataTypes.TIME, allowNull: true, defaultValue: null }
 })
 
 const Label = sequelize.define('label', {

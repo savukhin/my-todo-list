@@ -83,6 +83,8 @@ const Tasks = ({ projects, tasks, getTasks, addTask }) => {
                         <li key={task.id} onClick={() => choseTask(task.id)}>
                             <button onClick={() => completeTask(task.id)} style={{borderColor : priorityToColor[task.priority]}}></button>
                             <span>{task.title}</span>
+                            <span>{task.deadlineDate.slice(0, 10)}</span>
+                            <span>{task.deadlineTime.slice(0, 5)}</span>
                         </li>
                     )}
                 </ul>

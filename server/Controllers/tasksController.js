@@ -86,7 +86,7 @@ async function completeTask(req, res) {
 }
 
 async function changeTask(req, res) {
-    let { task_id, project_id, priority, title } = req.body;
+    let { task_id, project_id, priority, deadline_date, deadline_time, title } = req.body;
 
     var task = await Task.findOne({
         where: {
@@ -113,6 +113,8 @@ async function changeTask(req, res) {
         task.projectId = null;
     }
     task.priority = priority;
+    task.deadlineDate = deadline_date;
+    task.deadlineTime = deadline_time;
     task.title = title;
     task.save();
 

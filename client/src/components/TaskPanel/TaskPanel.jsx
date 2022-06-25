@@ -1,11 +1,12 @@
 import "./TaskPanel.css";
 import $ from 'jquery';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import PopupSelect from "../Basic Components/PopupSelect/PopupSelect";
 
 function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
     const [chosenProject, setChosenProject] = useState(null);
     const [chosenPriority, setChosenPriority] = useState(null);
+    const datetimeInputRef = useRef(null);
 
     function hidePanel() {
         cleanChosen();
@@ -19,13 +20,15 @@ function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
             hidePanel();
     }
 
-    function sendRequest(task_id, project_id, priority, title) {
+    function sendRequest(task_id, project_id, priority, deadline_date, deadline_time, title) {
         const req = {
             token: localStorage.getItem('token'),
             title,
             task_id,
             project_id,
-            priority
+            priority,
+            deadline_date,
+            deadline_time
         }
         console.log(req);
 
@@ -58,9 +61,12 @@ function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
         let task_id = task.id;
         let project_id = (chosenProject ? chosenProject : task.projectId);
         let priority = (chosenPriority ? chosenPriority : task.priority);
+        let deadline = datetimeInputRef.current.value;
         let title = $('#task-change-title').val();
+
+        console.log(deadline.slice(0, 10));
             
-        sendRequest(task_id, project_id, priority, title);
+        sendRequest(task_id, project_id, priority, deadline.slice(0, 10), deadline.slice(11), title);
 
         cleanChosen();
     }
@@ -124,6 +130,12 @@ function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
                             setter={setChosenPriority}
                             default_key={task.priority}
                         />
+                    </div>
+
+                    <hr />
+                    <div>
+                        <label>Deadline date</label>
+                        <input ref={datetimeInputRef} type="datetime-local" defaultValue={task.deadlineDate ? task.deadlineDate.slice(0, 10) + "T" + task.deadline_time : ""}></input>
                     </div>
                     <button className="button accept" onClick={sendRequestClick} > Change task </button>
                     <button className="button warning" onClick={hidePanel}> Cancel </button>
