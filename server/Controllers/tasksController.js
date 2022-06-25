@@ -113,8 +113,8 @@ async function changeTask(req, res) {
         task.projectId = null;
     }
     task.priority = priority;
-    task.deadlineDate = deadline_date;
-    task.deadlineTime = deadline_time;
+    task.deadlineDate = (deadline_date != "" ? deadline_date : null);
+    task.deadlineTime = (deadline_time != "" ? deadline_time : null);
     task.title = title;
     task.save();
 

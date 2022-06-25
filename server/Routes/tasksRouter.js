@@ -1,7 +1,7 @@
 const Router = require('express');
 const router = Router();
 const tasksController = require('../Controllers/TasksController');
-const { body } = require('express-validator');
+const { body, oneOf } = require('express-validator');
 const { validatorCheck } = require('../Middleware/error-checker')
 const { checkToken } = require('../Middleware/custom-validators')
 
@@ -39,8 +39,13 @@ router.post('/changeTask',
     body("task_id").isNumeric(),
     body("project_id").isNumeric(),
     body("priority").isInt({ min: 0, max: 3 }),
-    body("deadline_date").isDate({format: "YYYY-MM-DD"}),
-    body("deadline_time").matches('^(2[0-3]|1[0-9]|[1-9]):[0-5][0-9]$'),
+    oneOf([
+        body("deadline_date").equals(""),
+        [
+            body("deadline_date").isDate({format: "YYYY-MM-DD"}),
+            body("deadline_time").matches('^(2[0-3]|1[0-9]|[1-9]):[0-5][0-9]$'),
+        ]
+    ]),
     body("title").isAscii(),
     checkToken(),
     validatorCheck(),

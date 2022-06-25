@@ -74,6 +74,24 @@ const Tasks = ({ projects, tasks, getTasks, addTask }) => {
         3: "red",
     }
 
+    let printTask = (task) => {
+        let date = task.deadlineDate ? task.deadlineDate.slice(0, 10) : "";
+        let time = task.deadlineTime ? task.deadlineTime.slice(0, 5) : "";
+        let isOverdue = new Date(date + "T" + time) < Date.now();
+        return (
+            <>
+                <button onClick={() => completeTask(task.id)} style={{borderColor : priorityToColor[task.priority]}}></button>
+                <span>{task.title}</span>
+                { task.deadlineDate &&
+                    <div style={{backgroundColor : (isOverdue ? "red" : "green")}}>
+                        <span>{date}</span>
+                        <span>{time}</span>
+                    </div>
+                }
+            </>
+        )
+    }
+
     return (
         <div className="tasks">
             <div className='content'>
@@ -81,10 +99,7 @@ const Tasks = ({ projects, tasks, getTasks, addTask }) => {
                 <ul>
                     {tasks.filter(task => !task.completed).map(task =>
                         <li key={task.id} onClick={() => choseTask(task.id)}>
-                            <button onClick={() => completeTask(task.id)} style={{borderColor : priorityToColor[task.priority]}}></button>
-                            <span>{task.title}</span>
-                            <span>{task.deadlineDate.slice(0, 10)}</span>
-                            <span>{task.deadlineTime.slice(0, 5)}</span>
+                            { printTask(task) }
                         </li>
                     )}
                 </ul>
