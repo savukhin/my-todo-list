@@ -92,7 +92,7 @@ function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
                             titles={["No project", ...projects.map(project => project.title)]}
                             keys={["-1", ...projects.map(project => project.id)]}
                             setter={setChosenProject}
-                            default_key={task.projectId ? task.projectId : "null"}
+                            default_key={task.projectId ? task.projectId : "-1"}
                         />
                     </div>
 
