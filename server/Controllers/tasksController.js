@@ -1,7 +1,8 @@
-const { User, Task, Project } = require('../Models/models')
-const jwt = require('jsonwebtoken');
+const { User, Task, Project } = require('../Models/models');
+const moment = require('moment');
+const { Sequelize } = require('sequelize');
 
-const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
+const Op = Sequelize.Op;
 
 async function getTasks(req, res) {
     var tasks = await Task.findAll({
@@ -18,7 +19,29 @@ async function getTasks(req, res) {
 }
 
 async function getTasksByCategory(req, res) {
-    var tasks = await Task.findAll({
+    let sequelizeRequest = {}
+
+    switch (req.body["category"]) {
+        case "today":
+            sequelizeRequest.deadlineDate = {
+                [Op.gte]: moment().startOf('day').toDate(),
+                [Op.lte]: moment().endOf('day').toDate(),
+            }
+            break;
+        case "upcoming":
+            sequelizeRequest.deadlineDate = {
+                [Op.gte]: moment().add(1, 'days').startOf('day').toDate(),
+                [Op.lte]: moment().add(1, 'days').endOf('day').toDate(),
+            }
+            break;
+        case "incoming":
+            sequelizeRequest.projectId = null;
+            break;
+        default:
+            break;
+    }
+
+    let tasks = await Task.findAll({
         include: [{
             model: User,
             where: {
@@ -26,9 +49,7 @@ async function getTasksByCategory(req, res) {
             }
         },
         ],
-        where: {
-            projectId: null
-        },
+        where: sequelizeRequest,
         raw: true
     })
 
@@ -98,7 +119,7 @@ async function changeTask(req, res) {
         return res.status(403);
 
 
-    if (project_id != -1) {
+    if (project_id != -1 && project_id != null) {
         var project = await Project.findOne({
             where: {
                 id: project_id

@@ -12,7 +12,7 @@ router.post('/get',
 
 router.post('/get/category',
     body("token", "Must have token").matches(/^.+\..+\..+$/, "invalid token type"),
-    body("category").isIn(['incoming', 'today']),
+    body("category").isIn(['incoming', 'today', 'upcoming']),
     validatorCheck(),
     tasksController.getTasksByCategory)
 
@@ -37,13 +37,16 @@ router.post('/complete',
 
 router.post('/changeTask',
     body("task_id").isNumeric(),
-    body("project_id").isNumeric(),
+    oneOf([
+        body("project_id").isNumeric(),
+        body("project_id").isEmpty()
+    ]),
     body("priority").isInt({ min: 0, max: 3 }),
     oneOf([
         body("deadline_date").equals(""),
         [
             body("deadline_date").isDate({format: "YYYY-MM-DD"}),
-            body("deadline_time").matches('^(2[0-3]|1[0-9]|[1-9]):[0-5][0-9]$'),
+            body("deadline_time").matches('^(2[0-3]|1[0-9]|[1-9]):[0-5][0-9](:[0-5][0-9]){0,1}$'),
         ]
     ]),
     body("title").isAscii(),

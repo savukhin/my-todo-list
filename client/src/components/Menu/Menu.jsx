@@ -63,9 +63,8 @@ const Menu = ({ projects, getProjects }) => {
             <h2>Menu</h2>
             <div className="projects-panel">
                 <Link to={{ pathname:"/app/incoming/"}}> <div className="project-tab"> <div className='project-name'> <span> Incoming </span> </div> </div> </Link>
-                <div className="project-tab warning"> <div className='project-name'> <span> Today </span> </div> </div>
-                <div className="project-tab warning"> <div className='project-name'> <span> Upcoming </span> </div> </div>
-                <div className="project-tab warning"> <div className='project-name'> <span> Filters </span> </div> </div> 
+                <Link to={{ pathname:"/app/today/"}}> <div className="project-tab"> <div className='project-name'> <span> Today </span> </div> </div> </Link>
+                <Link to={{ pathname:"/app/upcoming/"}}> <div className="project-tab"> <div className='project-name'> <span> Upcoming </span> </div> </div> </Link>
             </div>
 
             <div className="expansion-panel" onClick={() => hideExpansion("favorite_projects")}>

@@ -52,7 +52,6 @@ const TodoListPage = ({ user, isCategory = false, match, location }) => {
   }
 
   const getTasks = () => {
-    console.log("getTasks");
     let req = {
       token: localStorage.getItem('token')
     }
