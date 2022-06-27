@@ -1,0 +1,44 @@
+#task-panel {
+    display: flex;
+    width: 400px;
+    /* background-color: var(--frame-color); */
+    left: calc(50% - 400px);
+    top: 0px;
+    flex-direction: column;
+}
+
+#task-panel .header {
+    display: flex;
+    position: relative;
+    background-color: var(--frame-color);
+    padding: 10px;
+
+    /* perspective: 1px; */
+    border-radius: 10px 10px 0 0;
+}
+
+#task-panel .content {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    padding: 10px;
+    background-color: var(--second-bg-color);
+    border-radius: 0 0 10px 10px;
+}
+
+#task-panel .content > * {
+    margin-top: 10px;
+}
+
+#task-panel hr {
+    width: 100%;
+}
+
+#task-priority {
+    position: absolute;
+    transform: translate(400px, -50px);
+}
+
+#task-panel .project-tab {
+
+}

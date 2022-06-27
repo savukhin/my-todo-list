@@ -25,7 +25,7 @@
     font-size: large;
 }
 
-.menu .project-tab {
+.project-tab {
     /* display: block; */
     display: flex;
     border-radius: 5px;
@@ -33,17 +33,17 @@
     align-items: left;
 }
 
-.menu .project-tab:hover {
+.project-tab:hover {
     background-color: var(--additional-color);
 }
 
-.menu .project-tab span {
+.project-tab span {
     display: flex;
     text-align: left;
     overflow: hidden;
 }
 
-.menu .project-tab .project-name {
+.project-tab .project-name {
     display: flex;
     flex: 1;
     cursor: pointer;

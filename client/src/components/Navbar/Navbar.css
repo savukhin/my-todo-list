@@ -24,20 +24,15 @@
     padding: 3px 10px;
 }
 
-.navbar .search-bar {
+.input-bar {
     height: calc(100% - 20px);
     padding: 10px;
     width: 100%;
 }
 
-.navbar .search-bar input {
-    border: 1px solid var(--additional-color);
-    background-color: var(--main-bg-color);
+.navbar input {
     width: calc(100% - 30px);
     height: calc(100% - 10px);
-    padding: 5px 15px;
-    color: var(--text-color);
-    border-radius: 6px;
 }
 
 .navbar .middle-part {

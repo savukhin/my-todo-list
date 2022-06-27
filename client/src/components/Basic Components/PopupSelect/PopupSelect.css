@@ -1,0 +1,16 @@
+.latent-select {
+    position: absolute;
+    transform: translate(400px, -50px);
+}
+
+.latent-select:after {
+    content: " ";
+    position: absolute;
+    top: 50%; /* At the bottom of the tooltip */
+    right: 100%;
+    margin-bottom: auto;
+    border-width: 8px;
+    border-style: solid;
+    border-color: transparent var(--text-color) transparent transparent;
+    transform: translateY(-8px);
+}
