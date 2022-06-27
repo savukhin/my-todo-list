@@ -6,9 +6,7 @@ const Profile = ({ profileUser, user }) => {
     const uploadHandler = (event) => {
         event.preventDefault();
         const data = new FormData();
-        console.log(inputPhotoRef.current.files);
         data.append('file', inputPhotoRef.current.files[0]); 
-        console.log(data);
 
         fetch('/api/auth/upload-photo', {
             method: 'POST',

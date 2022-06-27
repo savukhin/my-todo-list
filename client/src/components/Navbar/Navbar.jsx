@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 
 const Navbar = ({ user }) => {
     const logout = () => {
-        
+        localStorage.removeItem('token');
+        window.location.reload();
     }
 
     return (
@@ -31,7 +32,7 @@ const Navbar = ({ user }) => {
                             : require("./../../img/blank-profile-picture-973460_1280.webp")} alt=""></img>
                     </Link>
                 </div>
-                <button onClick={logout}>Log out</button>
+                <button className='button' onClick={logout}>Log out</button>
             </div>
         </div>
     )

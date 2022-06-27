@@ -39,7 +39,6 @@ const ProfilePage = ({ user, projects, getProjects }) => {
           .then (res => res.json())
           .then(res => {
               setIsLoading(false); 
-              console.log(res.user);
               setProfileUser(res.user);
           }).catch(error => {
             setIsLoading(false); 
