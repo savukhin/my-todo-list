@@ -90,10 +90,31 @@ async function changePassword(req, res) {
     return res.json({ status: "ok" })
 }
 
+
+
+async function uploadPhoto(req, res) {
+    const url = req.protocol + '://' + req.get('host')
+    req.user.avatar = url + '/uploads/' + req.file.filename;
+    req.user.save().then(result => {
+        res.status(201).json({
+            message: "User registered successfully!",
+            userCreated: {
+                _id: result._id,
+                profileImg: result.profileImg
+            }
+        })
+    }).catch(err => {
+        console.log(err),
+            res.status(500).json({
+                error: err
+            });
+    })
+}
+
 module.exports = {
     register,
     login,
     changePassword,
     checkToken,
-
+    uploadPhoto
 };

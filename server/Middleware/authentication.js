@@ -5,7 +5,7 @@ const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
 
 const authentication = () => {
     return async (req, res, next) => {
-        let { token } = req.body;
+        let { token } = req.headers;
 
         let verification;
         try {

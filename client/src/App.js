@@ -6,6 +6,7 @@ import LoginPage from './pages/Login';
 import ChangePasswordPage from './pages/ChangePassword';
 import { Component, useEffect, useState } from 'react';
 import Page404 from './pages/ResponsePages/Page404';
+import ProfilePage from './pages/Profile';
 
 const App = () => {
   const [user, setUser] = useState(false);
@@ -25,7 +26,8 @@ const App = () => {
     fetch('/api/auth/check-token', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'token' : localStorage.getItem('token')
         },
         body: JSON.stringify(req)
     })
@@ -71,6 +73,8 @@ const App = () => {
           {/* { this.generateLogRoute("/app/:projectCategory", <TodoListPage user={this.state.user} isCategory={true}/>, "/login", true) } */}
           { generateLogRoute("/app/:projectCategory", <TodoListPage user={user} isCategory={true} />, "/login", true) }
           { generateLogRoute("/app/project/:projectId", <TodoListPage user={user} />, "/login", true) }
+
+          { generateLogRoute("/user/:profileId", <ProfilePage user={user}/>, "/login", true) }
 
           <Route path="*" element={<Page404 />} />
         </Routes>

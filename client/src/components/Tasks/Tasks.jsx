@@ -32,7 +32,8 @@ const Tasks = ({ projects, tasks, getTasks, addTask }) => {
         fetch('/api/tasks/complete', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'token' : localStorage.getItem('token')
             },
             body: JSON.stringify(req)
         })

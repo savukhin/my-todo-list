@@ -32,7 +32,8 @@ const TodoListPage = ({ user, isCategory = false, match, location }) => {
     fetch('/api/projects/get', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'token' : localStorage.getItem('token')
       },
       body: JSON.stringify(req)
     })
@@ -64,7 +65,8 @@ const TodoListPage = ({ user, isCategory = false, match, location }) => {
     fetch("/api/tasks/get/" + (isCategory ? "category" : "project"), {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'token' : localStorage.getItem('token')
       },
       body: JSON.stringify(req)
     })
@@ -93,7 +95,8 @@ const TodoListPage = ({ user, isCategory = false, match, location }) => {
     fetch('/api/tasks/add', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'token' : localStorage.getItem('token')
       },
       body: JSON.stringify(req)
     })
@@ -119,7 +122,7 @@ const TodoListPage = ({ user, isCategory = false, match, location }) => {
   return (
     <div>
       <div className="wrapper">
-        <Navbar />
+        <Navbar user={user}/>
         <Menu projects={projects} getProjects={getProjects} />
         <Tasks projects={projects} getTasks={getTasks} addTask={addTask} tasks={tasks} 
           key={isCategory ? projectCategory : projectId}/>

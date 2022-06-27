@@ -15,7 +15,8 @@ class ChangePasswordPage extends Component {
         fetch('/api/auth/change-password', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'token' : localStorage.getItem('token')
             },
             body: JSON.stringify(req)
         }).then (res => res.json())
