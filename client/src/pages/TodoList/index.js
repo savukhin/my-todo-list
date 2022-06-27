@@ -5,16 +5,9 @@ import Tasks from '../../components/Tasks/Tasks';
 import { useParams } from 'react-router-dom'
 
 
-const TodoListPage = ({ user, isCategory = false, match, location }) => {
-
-  const [projects, setProjects] = useState([{ id: 1, title: "Health", isFavorite: true, color: "#ff0000" },
-  { id: 2, title: "to-do-list", isFavorite: true, color: "#00ff00" },
-  { id: 3, title: "Study", isFavorite: false, color: "#ff00ff" }]);
+const TodoListPage = ({ user, isCategory = false, match, location, projects, getProjects }) => {
   const [tasks, setTasks] = useState([]);
 
-  // const {
-  //   params: { projectId }
-  // } = match;
   const { projectCategory, projectId } = useParams();
 
   const categoriesToReq = {
@@ -23,34 +16,6 @@ const TodoListPage = ({ user, isCategory = false, match, location }) => {
   }
 
   const [mount,] = useState(0);
-
-  const getProjects = () => {
-    let req = {
-      token: localStorage.getItem('token')
-    }
-
-    fetch('/api/projects/get', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'token' : localStorage.getItem('token')
-      },
-      body: JSON.stringify(req)
-    })
-      .then((res) => {
-        if (res.status >= 200 && res.status < 300) {
-          return res;
-        } else {
-          let error = new Error(res.statusText);
-          error.response = res;
-          throw error;
-        }
-      })
-      .then(res => res.json())
-      .then(res => {
-        setProjects(res.data);
-      });
-  }
 
   const getTasks = () => {
     let req = {

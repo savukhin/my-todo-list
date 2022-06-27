@@ -1,46 +1,61 @@
 import { useParams } from "react-router-dom";
-import axios from 'axios';
 import { useState, useEffect } from "react";
+import Navbar from "../../components/Navbar/Navbar";
+import Menu from "../../components/Menu/Menu";
+import Profile from "../../components/Profile/Profile";
 
-const ProfilePage = ({ user }) => {
+const ProfilePage = ({ user, projects, getProjects }) => {
     const { profileId } = useParams();
-    const [ photos, setPhotos ] = useState(null);
+    const [ mount, _ ] = useState(0);
+    const [ profileUser, setProfileUser ] = useState(0);
+    const [ isLoading, setIsLoading ] = useState(true)
 
-    const uploadHandler = (event) => {
-        event.preventDefault();
-        const data = new FormData();
-        data.append('file', event.target.files[0]); 
+    useEffect(() => {
+        getProjects();
+        getUser(profileId);
+        setIsLoading(true);
+    }, [mount]);
 
-        fetch('/api/auth/upload-photo', {
+    const getUser = (user_id) => {
+        const req = {
+            user_id
+        }
+        fetch('/api/auth/get-user', {
             method: 'POST',
             headers: {
-                'token' : localStorage.getItem('token')
+                'Content-Type': 'application/json'
             },
-            body: data
+            body: JSON.stringify(req)
         })
-            .then((res) => {
-                if (res.status >= 200 && res.status < 300) {
-                    return res;
-                } else {
-                    let error = new Error(res.statusText);
-                    error.response = res;
-                    throw error;
-                }
-            })
-            .then(res => res.json())
-            .then(res => {
-                console.log(res);
-            })
-            .catch(error => {
-            });
-    }
+          .then((res) => {
+            if (res.status >= 200 && res.status < 300) {
+              return res;
+            } else {
+              let error = new Error(res.statusText);
+              error.response = res;
+              throw error
+            }
+          })
+          .then (res => res.json())
+          .then(res => {
+              setIsLoading(false); 
+              console.log(res.user);
+              setProfileUser(res.user);
+          }).catch(error => {
+            setIsLoading(false); 
+            setProfileUser(false);
+          });
+      }
 
     return (
-        <div>
-            <input type="file" name="file" onChange={uploadHandler}/>
-            {user.avatar}
-            <img src={user.avatar}></img>
-        </div>
+        <div className="wrapper">
+            <Navbar user={user}/>
+            <Menu projects={projects} getProjects={getProjects} />
+            { isLoading
+                ? <span>LOADING</span>
+                : <Profile profileUser={profileUser} user={user}/>
+            }
+      </div>
     )
 }
 

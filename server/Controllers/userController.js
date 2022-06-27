@@ -1,4 +1,4 @@
-const { User } = require('../Models/models')
+const { User, Task } = require('../Models/models')
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
@@ -96,19 +96,35 @@ async function uploadPhoto(req, res) {
     const url = req.protocol + '://' + req.get('host')
     req.user.avatar = url + '/uploads/' + req.file.filename;
     req.user.save().then(result => {
-        res.status(201).json({
-            message: "User registered successfully!",
-            userCreated: {
-                _id: result._id,
-                profileImg: result.profileImg
-            }
-        })
+        res.status(200).json({ data: "Photo updated" })
     }).catch(err => {
-        console.log(err),
-            res.status(500).json({
-                error: err
-            });
+        console.log(err);
+        res.status(500).json({ error: err });
     })
+}
+
+async function getUser(req, res) {
+    const { user_id } = req.body;
+    
+    const user = await User.findOne({
+        where: {
+            id: user_id
+        },
+        raw: true
+    });
+
+    if (!user)
+        return res.status(400).json({ error: "User not found" });
+
+    const countOfActiveTasks = await Task.count({
+        where: {
+            userId: user.id
+        }
+    })
+
+    user.countOfActiveTasks = countOfActiveTasks;
+
+    return res.status(200).json({ user: user });
 }
 
 module.exports = {
@@ -116,5 +132,6 @@ module.exports = {
     login,
     changePassword,
     checkToken,
-    uploadPhoto
+    uploadPhoto,
+    getUser
 };

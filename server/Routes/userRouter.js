@@ -52,4 +52,9 @@ var upload = multer({ storage: storage,
 
 router.post('/upload-photo', validatorCheck(), upload.single('file'), userController.uploadPhoto)
 
+router.post('/get-user', 
+    body("user_id").isNumeric(),
+    userController.getUser)
+
+
 module.exports = router
