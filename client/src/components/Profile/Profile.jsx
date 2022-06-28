@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 
 const Profile = ({ profileUser, user }) => {
     const inputPhotoRef = useRef(0);
@@ -50,6 +51,12 @@ const Profile = ({ profileUser, user }) => {
             }
             <br/>
             Count of active tasks: { profileUser.countOfActiveTasks }
+            <br/>
+            <br/>
+
+            { profileUser.id == user.id && 
+                <Link to={{ pathname: "/change-password" }}> <button className="button"> Change Password </button> </Link>
+            }
         </div>
     )
 }

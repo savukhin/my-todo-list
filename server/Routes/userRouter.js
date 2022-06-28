@@ -3,7 +3,7 @@ const router = Router();
 const userController = require('../Controllers/UserController');
 const { body } = require('express-validator');
 const { validatorCheck } = require('../Middleware/error-checker')
-const { checkPassword, confirmPassword, checkUsername } = require('../Middleware/custom-validators')
+const { checkPassword, confirmPassword, checkUsername, isPasswordCorrect } = require('../Middleware/custom-validators')
 let multer = require('multer');
 
 router.post('/reg', 
@@ -17,9 +17,9 @@ router.post('/reg',
 router.post('/login', userController.login)
 router.post('/check-token', userController.checkToken)
 router.post('/change-password', 
-    checkUsername(),
-    checkPassword(),
-    confirmPassword(),
+    isPasswordCorrect("password"),
+    checkPassword("new_password"),
+    confirmPassword("new_password", "new_password2"),
     validatorCheck(),
     userController.changePassword)
 

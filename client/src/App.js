@@ -97,7 +97,7 @@ const App = () => {
           { generateLogRoute("/reg", <RegistrationPage authCallback={ auth }/>, "/", false) }
           { generateLogRoute("/login", <LoginPage authCallback={ auth }/>, "/", false) }
 
-          { generateLogRoute("/change-password", <ChangePasswordPage user={user} />, "/login", true) }
+          { generateLogRoute("/change-password", <ChangePasswordPage user={user} projects={projects} getProjects={getProjects} />, "/login", true) }
           { ["/app", "/"].map((path, key) =>
             generateLogRoute(path, <Navigate to="/app/incoming"/>, "/login", true, {key:key})) }
 
