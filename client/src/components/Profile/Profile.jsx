@@ -50,7 +50,7 @@ const Profile = ({ profileUser, user }) => {
             { profileUser.id == user.id && 
                 <div>
                     <input type="file" name="file" ref={inputPhotoRef}/> 
-                    <button type="submit" onClick={uploadHandler}>Change photo</button>
+                    <button className="button" type="submit" onClick={uploadHandler}>Change photo</button>
                 </div>
             }
             <br/>

@@ -30,7 +30,6 @@ function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
             deadline_date,
             deadline_time
         }
-        console.log(req);
 
         fetch('/api/tasks/changeTask', {
             method: 'POST',
@@ -60,8 +59,8 @@ function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
 
     function sendRequestClick() {
         let task_id = task.id;
-        let project_id = (chosenProject ? chosenProject : task.projectId);
-        let priority = (chosenPriority ? chosenPriority : task.priority);
+        let project_id = (chosenProject != null ? chosenProject : task.projectId);
+        let priority = (chosenPriority != null ? chosenPriority : task.priority);
         let deadline = datetimeInputRef.current.value;
         let title = $('#task-change-title').val();
             
@@ -124,7 +123,7 @@ function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
                                     </span>
                                 )
                             }
-                            titles={[...Array(4).keys()].map(num => "Priority " + num).reverse()}
+                            titles={[3, 2, 1, 0].map(num => "Priority " + num)}
                             keys={[3, 2, 1, 0]}
                             setter={setChosenPriority}
                             default_key={task.priority}
