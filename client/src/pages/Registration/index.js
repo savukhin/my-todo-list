@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import $ from "jquery";
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const RegistrationPage = () => {
     const navigator = useNavigate();
+    const [ errors, setErrors ] = useState(null);
 
     function registerUser(event) {
         event.preventDefault();
@@ -27,20 +27,16 @@ const RegistrationPage = () => {
             },
             body: JSON.stringify(req)
         })
-        .then((res) => {
-            if (res.status >= 200 && res.status < 300) {
-                return res;
-            } else {
-                let error = new Error(res.statusText);
-                error.response = res;
-                throw error
-            }
-            })
         .then(res => res.json())
         .then (res => {
-            localStorage.setItem('token', res.token);
-            navigator('/');
-            navigator(0);
+            console.log(res);
+            if (res.status >= 200 && res.status < 300) {
+                localStorage.setItem('token', res.token);
+                navigator('/');
+                navigator(0);
+            } else {
+                setErrors(res.errors);
+            }
         });
     }
 
@@ -70,8 +66,23 @@ const RegistrationPage = () => {
                 <br />
                 <input type="submit" className='button' value="Send" />
             </form>
+            <br/>
 
-            <br />
+            {
+                errors &&
+                <>
+                    { errors.map((error, index) => 
+                        <div key={index}>
+                            <span className='warning'>
+                                { error.msg }
+                            </span>
+                            <br/>
+                        </div>
+                    ) }
+                    <br/>
+                </>
+            }
+
             <Link to="/login" className="button">Login</Link>
         </div>
     );

@@ -14,7 +14,7 @@ async function getProjects(req, res) {
         raw: true
     })
 
-    return res.status(200).json({ data: projects });
+    return res.status(200).json({ status: 200, data: projects });
 }
 
 async function addProject(req, res) {
@@ -26,7 +26,7 @@ async function addProject(req, res) {
         userId: req.user.id,
     })
 
-    return res.status(200).json({ data: "ok" });
+    return res.status(200).json({ status: 200, data: "ok" });
 }
 
 module.exports = {
