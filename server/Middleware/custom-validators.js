@@ -1,13 +1,25 @@
 const { body } = require('express-validator');
 
-const checkUsername = () => body("username", "username must be longer than 5").isLength({ min: 5 })
+const checkUsername = (field="username") => body(field, "Username must be longer than 5").isLength({ min: 5 })
 
-const checkPassword = () => body("password", "password must be longer than 5").isLength({ min: 5 })
+const checkPassword = (field="password") => body(field, "Password must be longer than 5").isLength({ min: 5 })
 
-const confirmPassword = () => 
-    body('password2').custom((value, { req }) => {
-        if (value !== req.body.password) {
+const confirmPassword = (passwordField="password", checkField="password2") => 
+    body(checkField).custom((value, { req }) => {
+        if (value !== req.body[passwordField]) {
             throw new Error('Password confirmation does not match password');
+        }
+
+        return true;
+    })
+
+const isPasswordCorrect = (field="password") => 
+    body(field).custom((value, { req }) => {
+        if (req.user == false)
+            throw new Error('User not authenticated');
+
+        if (value !== req.user.password) {
+            throw new Error('Password is incorrect');
         }
 
         return true;
@@ -16,7 +28,7 @@ const confirmPassword = () =>
 const checkToken = () => {
     return (req, res, next) => {
         if (!req.user)
-            return res.status(400).json({ error: 'unvalid token' });
+            return res.status(400).json({ error: 'Unvalid token' });
         return next();
     }
 }
@@ -29,4 +41,5 @@ module.exports = {
     checkUsername, 
     checkToken,
     isColor,
+    isPasswordCorrect
 };

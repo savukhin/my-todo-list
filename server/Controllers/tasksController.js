@@ -15,7 +15,7 @@ async function getTasks(req, res) {
         raw: true
     })
 
-    return res.status(200).json({ data: tasks });
+    return res.status(200).json({ status: 200, data: tasks });
 }
 
 async function getTasksByCategory(req, res) {
@@ -53,7 +53,7 @@ async function getTasksByCategory(req, res) {
         raw: true
     })
 
-    return res.status(200).json({ data: tasks });
+    return res.status(200).json({ status: 200, data: tasks });
 }
 
 async function getTasksByProject(req, res) {
@@ -73,7 +73,7 @@ async function getTasksByProject(req, res) {
         raw: true
     })
 
-    return res.status(200).json({ data: tasks });
+    return res.status(200).json({ status: 200, data: tasks });
 }
 
 async function addTask(req, res) {
@@ -85,7 +85,7 @@ async function addTask(req, res) {
         userId: req.user.id,
     })
 
-    return res.status(200).json({ data: "ok" });
+    return res.status(200).json({ status: 200, data: "ok" });
 }
 
 async function completeTask(req, res) {
@@ -98,12 +98,12 @@ async function completeTask(req, res) {
     })
 
     if (req.user.id != task.userId)
-        return res.status(403);
+        return res.status(403).json({ status: 403 });
 
     task.completed = true;
     task.save();
 
-    return res.status(200).json({ data: "ok" });
+    return res.status(200).json({ status: 200, data: "ok" });
 }
 
 async function changeTask(req, res) {
@@ -116,7 +116,7 @@ async function changeTask(req, res) {
     })
 
     if (req.user.id != task.userId)
-        return res.status(403);
+        return res.status(403).json({ status: 403 });
 
 
     if (project_id != -1 && project_id != null) {
@@ -127,7 +127,7 @@ async function changeTask(req, res) {
         })
 
         if (!project)
-            return res.status(400).json({ error: "Project not found" });
+            return res.status(400).json({ status: 400, error: "Project not found" });
 
         task.projectId = project.id;
     } else {
@@ -139,7 +139,7 @@ async function changeTask(req, res) {
     task.title = title;
     task.save();
 
-    return res.status(200).json({ data: "ok" });
+    return res.status(200).json({ status: 200, data: "ok" });
 }
 
 module.exports = {

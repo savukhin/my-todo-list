@@ -1,4 +1,4 @@
-const { User } = require('../Models/models')
+const { User, Task } = require('../Models/models')
 const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = 'asdfyev dfasodnfuiqepon!#@$eufnfod qewp oih dpfpasubdf'
@@ -20,7 +20,13 @@ async function register(req, res) {
     const { username, password, email } = req.body;
     console.log(`Username is ${username} pass ${password}`)
 
-    try {
+    if (await User.findOne({ where: { email } }))
+        return res.status(400).json({ status: 400, errors: [ { msg: "User with this email is already exists" } ] });
+
+    if (await User.findOne({ where: { username } }))
+        return res.status(400).json({ status: 400, errors: [ { msg: "User with this username is already exists" } ] });
+
+    try {        
         const user = await User.create({
             username: username,
             email: email,
@@ -28,10 +34,10 @@ async function register(req, res) {
         })
         console.log(`create successfull`, user);
         const token = generateToken(user);
-        return res.status(200).json({ token: token });
+        return res.status(200).json({ status: 200, token: token });
     } catch (error) {
         console.log(`register error ${error}`);
-        return res.status(400).json({ error: "Key is already exists" });
+        return res.status(500).json({ status: 500, errors: [ { msg: "Unexcpected error" } ] });
     }
 
     res.json(req.body);
@@ -48,46 +54,60 @@ async function login(req, res) {
     });
 
     if (!user)
-        return res.status(400).json({ error: 'User not found' });
+        return res.status(400).json({ status: 400, errors: [ { msg: 'User not found with this login/password' } ] });
     
-    return res.json({ token: generateToken(user) });
+    return res.json({ status: 200, token: generateToken(user) });
 }
 
 async function checkToken(req, res) {
     if (!req.user)
-        return res.status(400).json({ error: 'Invalide token!' });
+        return res.status(400).json({ status: 400, errors: [ { msg: 'Invalide token!' } ] });
 
-    return res.status(200).json({ user: req.user });
+    return res.status(200).json({ status: 200, user: req.user });
 }
 
 async function changePassword(req, res) {
-    const { token } = req.body;
+    req.user.password = req.body.new_password;
+    req.user.save();
+
+    return res.json({ status: 200 })
+}
+
+
+
+async function uploadPhoto(req, res) {
+    const url = req.protocol + '://' + req.get('host')
+    req.user.avatar = url + '/uploads/' + req.file.filename;
+    req.user.save().then(result => {
+        res.status(200).json({ status: 200, data: "Photo updated" })
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({ status: 500, errors: [ { msg: err } ] });
+    })
+}
+
+async function getUser(req, res) {
+    const { user_id } = req.body;
     
-    const existing = await User.findOne(
-        { where: { id: 1 } }
-    );
+    const user = await User.findOne({
+        where: {
+            id: user_id
+        },
+        raw: true
+    });
 
-    console.log(" try to update to newpassword ", req.body.newPassword, " from ", existing.password);
-    
-    try {
-        const user = jwt.verify(token, JWT_SECRET);
-        await User.update(
-            { password: req.body.newPassword },
-            { where: { id: user.id } }
-        )
-        .then(result =>
-            console.log('success', result)
-        )
-        .catch(err =>
-            console.log(err)
-        )
-        console.log("JWT decoded", user);
-    } catch {
-        return res.json({ status: 'error', error: 'unvalid token' });
-    }
+    if (!user)
+        return res.status(400).json({ status: 400, error: [ { msg: "User not found" } ] });
 
+    const countOfActiveTasks = await Task.count({
+        where: {
+            userId: user.id
+        }
+    })
 
-    return res.json({ status: "ok" })
+    user.countOfActiveTasks = countOfActiveTasks;
+
+    return res.status(200).json({ status: 200, user: user });
 }
 
 module.exports = {
@@ -95,5 +115,6 @@ module.exports = {
     login,
     changePassword,
     checkToken,
-
+    uploadPhoto,
+    getUser
 };

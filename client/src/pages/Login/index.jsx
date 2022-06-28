@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import $ from "jquery";
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const LoginPage = (props) => {
     const navigator = useNavigate();
+    const [ errors, setErrors ] = useState(null);
 
     function login(event) {
         event.preventDefault();
@@ -22,20 +22,17 @@ const LoginPage = (props) => {
             },
             body: JSON.stringify(req)
         })
-        .then((res) => {
-            if (res.status >= 200 && res.status < 300) {
-                return res;
-            } else {
-                let error = new Error(res.statusText);
-                error.response = res;
-                throw error
-            }
-            })
+        
         .then(res => res.json())
         .then(res => {
-            localStorage.setItem('token', res.token);
-            navigator('/');
-            navigator(0);
+            if (res.status >= 200 && res.status < 300) {
+                localStorage.setItem('token', res.token);
+                navigator('/');
+                navigator(0);
+            } else {
+                console.log(res);
+                setErrors(res.errors);
+            }
         }).catch(error => {
             // console.log("error is ", error);
         });
@@ -61,8 +58,23 @@ const LoginPage = (props) => {
                 <br />
                 <input type="submit" value="Send" className='button' />
             </form>
-
             <br />
+            
+            {
+                errors &&
+                <>
+                    { errors.map((error, key) => 
+                        <div key={key}>
+                            <span className='warning'>
+                                { error.msg }
+                            </span>
+                            <br/>
+                        </div>
+                    ) }
+                    <br/>
+                </>
+            }
+
             <Link to="/reg" className="button">Register</Link>
         </div>
     );

@@ -63,7 +63,6 @@ var PopupSelect = ({ icons, titles, keys, setter, default_key }) => {
                 </div>
             </div>
         )
-        // return <></>
     }
 
     let selectOptions = options.map(({ title, icon, key }, _) => {

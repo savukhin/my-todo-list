@@ -8,7 +8,8 @@ const port = 5000;
 
 const app = express();
 
-app.use(express.json());
+app.use('/uploads', express.static('uploads'));
+app.use(express.json({ limit: '2MB' }));
 app.use(authentication());
 
 app.use('/api', router);

@@ -35,7 +35,8 @@ function TaskPanel({ projects, task, updateTasks, cleanChosen }) {
         fetch('/api/tasks/changeTask', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'token' : localStorage.getItem('token')
             },
             body: JSON.stringify(req)
         })
