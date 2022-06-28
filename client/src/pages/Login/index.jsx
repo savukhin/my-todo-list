@@ -5,6 +5,10 @@ const LoginPage = (props) => {
     const navigator = useNavigate();
     const [ errors, setErrors ] = useState(null);
 
+    useEffect(() => {
+        document.title = "Login";
+    }, []);
+
     function login(event) {
         event.preventDefault();
 

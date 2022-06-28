@@ -1,8 +1,12 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Profile = ({ profileUser, user }) => {
     const inputPhotoRef = useRef(0);
+
+    useEffect(() => {
+        document.title = "Profile";
+    }, []);
 
     const uploadHandler = (event) => {
         event.preventDefault();

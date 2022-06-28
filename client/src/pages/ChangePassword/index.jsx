@@ -1,10 +1,14 @@
-import React, { Component, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 import Menu from '../../components/Menu/Menu';
 
 const ChangePasswordPage = ({ user, projects, getProjects }) => {
     const [ hiddenPasswords, setHiddenPasswords ] = useState(true);
     const [ errors, setErrors ] = useState(null);
+
+    useEffect(() => {
+        document.title = "Change Password";
+    }, []);
 
     const changePassword = (event) => {
         event.preventDefault();

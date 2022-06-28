@@ -81,6 +81,14 @@ const TodoListPage = ({ user, isCategory = false, match, location, projects, get
   }
 
   useEffect(() => {
+    if (isCategory) {
+      document.title = projectCategory[0].toUpperCase() + projectCategory.slice(1) + " tasks";
+    } else {
+      document.title = projects.filter(project => project.id == projectId)[0].title;
+    }
+  }, [projectCategory, projectId])
+
+  useEffect(() => {    
     getProjects();
   }, [mount]);
 

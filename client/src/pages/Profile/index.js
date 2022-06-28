@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Menu from "../../components/Menu/Menu";
 import Profile from "../../components/Profile/Profile";
 
 const ProfilePage = ({ user, projects, getProjects }) => {
+    const navigator = useNavigate();
     const { profileId } = useParams();
     const [ mount, _ ] = useState(0);
     const [ profileUser, setProfileUser ] = useState(0);
@@ -43,6 +44,8 @@ const ProfilePage = ({ user, projects, getProjects }) => {
           }).catch(error => {
             setIsLoading(false); 
             setProfileUser(false);
+            navigator('/404');
+            navigator(0);
           });
       }
 

@@ -41,12 +41,13 @@ const RegistrationPage = () => {
     }
 
     useEffect(() => {
+        document.title = "Registration";
         const form = document.getElementById('reg-form');
         form.addEventListener("submit", registerUser);
         return () => {
             form.removeEventListener("submit", registerUser);
         };
-    })
+    }, [])
 
     return (
         <div>
